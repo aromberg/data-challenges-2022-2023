@@ -3,13 +3,13 @@
 Source: https://archive-beta.ics.uci.edu
 
 - [Diabetes 130-US hospitals for years 1999-2008](https://archive-beta.ics.uci.edu/ml/datasets/diabetes+130+us+hospitals+for+years+1999+2008)
-- [Drug Review Dataset (Drugs.com)](https://archive-beta.ics.uci.edu/ml/datasets/drug+review+dataset+drugs+com)
+- [Drug Review Dataset (Drugs.com)](https://archive-beta.ics.uci.edu/ml/datasets/drug+review+dataset+drugs+com) --> out, no gender info
 - [Parkinsons Telemonitoring](https://archive-beta.ics.uci.edu/ml/datasets/parkinsons+telemonitoring)
-- [Drug Review Dataset (Druglib.com)](https://archive-beta.ics.uci.edu/ml/datasets/drug+review+dataset+druglib+com)
+- [Drug Review Dataset (Druglib.com)](https://archive-beta.ics.uci.edu/ml/datasets/drug+review+dataset+druglib+com) --> out, no gender info
 - [Estimation of obesity levels based on eating habits and physical condition](https://archive-beta.ics.uci.edu/ml/datasets/estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition)
 - [Drug consumption (quantified)](https://archive-beta.ics.uci.edu/ml/datasets/drug+consumption+quantified)
 - [Thyroid Disease](https://archive-beta.ics.uci.edu/ml/datasets/thyroid+disease)
-- [Diabetes](https://archive-beta.ics.uci.edu/ml/datasets/diabetes)
+- [Diabetes](https://archive-beta.ics.uci.edu/ml/datasets/diabetes) --> out, no gender info
 
 ## Moody PhysioNet Challenges
 Source: https://physionet.org/about/challenge/moody-challenge
