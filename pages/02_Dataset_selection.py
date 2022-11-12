@@ -49,7 +49,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.markdown(
     """
-    The selection process resulted in {} dataset possibly fit for analysis.
+    The selection process resulted in {} datasets possibly fit for analysis.
 
     ## Sample sizes
 
