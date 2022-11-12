@@ -62,7 +62,7 @@ st.plotly_chart(fig2, use_container_width=True)
 
 st.markdown(
     """
-    # Final selection
+    ## Final selection
     
     We decided to select the "Heart disease" dataset because X.
 
