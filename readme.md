@@ -1,27 +1,40 @@
 # Project for Data Challenges 2022/2023 (Prof. Dr. Lena Wiese)
-Team: Martin Brand, Katharina Lenhart, Adrian Romberg, Yang Xie
 
-## Running the app
+Data Challenges 2022/2023 is a university-hosted data challenge. This year's goal is to analyze public datasets to find possible differences in how different genders are affected by chronic diseases (e. g. prevalence, degree of severity, symptoms).
+
+
+## Streamlit Cloud
 The main brain of this repository is deployed automatically to [Streamlit Cloud](https://aromberg-data-challenges-2022-2023-home-d7dmjj.streamlit.app), where it can be viewed.
 
-### Local installation
+## Local installation
 
 Make sure you have `Python 3.10` and `pipenv` installed. `pipenv` can be installed by running:
-
-`pip install pipenv`
+```
+pip install pipenv
+```
 
 Clone the repository:
-
-`git clone https://github.com/aromberg/data-challenges-2022-2023.git`
+```
+git clone https://github.com/aromberg/data-challenges-2022-2023.git
+```
 
 Within the cloned reposity, install all requirements:
-
-`pipenv install`
+```
+pipenv install
+```
 
 Activate the virtual environment by running:
-
-`pipenv shell`
+```
+pipenv shell
+```
 
 You can now run the app:
+```
+streamlit run Home.py
+```
 
-`streamlit run Home.py`
+## Team
+- Martin Brand (M. Sc. Bioinformatics Student)
+- Katharina Lenhart (M. Sc. Bioinformatics Student)
+- Adrian Romberg (M. Sc. Bioinformatics Student)
+- Yang Xie (M. Sc. Bioinformatics Student)
