@@ -1,14 +1,14 @@
-# Project for Data Challenges 2022/2023 (Prof. Dr. Lena Wiese)
+# Project for Data Challenges 2022/2023
 
-Data Challenges 2022/2023 is a university-hosted data challenge. This year's goal is to analyze public datasets to find possible differences in how different genders are affected by chronic diseases (e. g. prevalence, degree of severity, symptoms).
+Data Challenges 2022/2023 is a university-hosted data challenge project sponsored by Prof. Dr. Lena Wiese. This year's goal is to analyze public datasets to find possible differences in how different genders are affected by chronic diseases (e. g. prevalence, degree of severity, symptoms).
 
 
 ## Streamlit Cloud
-The main brain of this repository is deployed automatically to [Streamlit Cloud](https://aromberg-data-challenges-2022-2023-home-d7dmjj.streamlit.app), where it can be viewed.
+The main branch of this repository is deployed automatically to [Streamlit Cloud](https://aromberg-data-challenges-2022-2023-home-d7dmjj.streamlit.app), where it can be viewed.
 
 ## Local installation
 
-Make sure you have `Python 3.10` and `pipenv` installed. `pipenv` can be installed by running:
+Make sure you have Python 3.10 and `pipenv` installed. `pipenv` can be installed by running:
 ```
 pip install pipenv
 ```
@@ -18,7 +18,7 @@ Clone the repository:
 git clone https://github.com/aromberg/data-challenges-2022-2023.git
 ```
 
-Within the cloned reposity, install all requirements:
+Within the cloned repository, install all requirements:
 ```
 pipenv install
 ```
