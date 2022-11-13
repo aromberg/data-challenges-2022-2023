@@ -4,7 +4,7 @@ import plotly.express as px
 
 
 st.set_page_config(page_title="Dataset Selection",
-                   page_icon="📐")
+                   page_icon="📲")
 
 st.markdown(
     """
@@ -57,15 +57,25 @@ st.markdown(
     """.format(str(l))
 )
 
-fig2 = px.histogram(df[(df.Status == "Possible fit") | (df.Status == "Selected")], x="Sample size", nbins = 200)
-st.plotly_chart(fig2, use_container_width=True)
+
+df_hist = df[(df.Status == "Possible fit") | (df.Status == "Selected")]
+hist = px.histogram(df_hist, x="Sample size", nbins = 200)
+st.plotly_chart(hist, use_container_width=True)
+
+st.write("Zooming in on possibly fitting datasets with sample sizes < 5000:")
+
+df_zoom = df_hist[df["Sample size"] < 5000]
+hist_zoomed = px.histogram(df_zoom, x="Sample size", nbins=25)
+st.plotly_chart(hist_zoomed, use_container_width=True)
 
 st.markdown(
     """
     ## Final selection
     
-    We decided to select the "Heart disease" dataset because X.
+    We finally decided to select the **"Heart Disease" dataset**. The data was published by David Aha in 1988 and consists of data from four different clinics: Cleveland, Hungary, Switzerland, and Long Beach V. While the original version consists of 76 attributes, only **14 attributes** are available and are commonly used for analysis. It includes **920 samples**. The "num" column refers to the predicted variable (0 if no disease was found and != 0 if a disease was found).
 
+    Our rationale for selecting it was not only that it appeared the **most interesting for our team**, but also its **good documentation**, how well it is known, and lastly, its relevance given the fact that it is the **leading cause of death worldwide** (except Africa) and that it is estimated that **90% of all cases are preventable**.
+    
     ---
    """
 )
