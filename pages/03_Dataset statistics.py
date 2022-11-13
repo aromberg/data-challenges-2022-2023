@@ -24,11 +24,11 @@ st.plotly_chart(hist, use_container_width=True)
 st.write("## Scatter Plot")
 
 scatter_x = st.selectbox(
-    'Which two column would you like to plot on the x axis?',
+    'Which column would you like to plot on the x axis?',
     df.columns[1:])
 
 scatter_y = st.selectbox(
-    'Which two column would you like to plot on the y axis?',
+    'Which column would you like to plot on the y axis?',
     df.columns[1:],
     index=7)
 
