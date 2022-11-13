@@ -54,5 +54,10 @@ st.markdown(
     12. **ca**: number of major vessels (0-3) colored by flourosopy   
     13. **thal**: 3 = normal; 6 = fixed defect; 7 = reversable defect
     14. **num**: diagnosis of heart disease/angiographic disease status (0 = < 50% diameter narrowing; 1 = > 50% diameter narrowing)
+    
+    ---
     """
 )
+
+with st.expander("See complete dataset"):
+    st.write(df)
