@@ -74,7 +74,7 @@ st.markdown(
     
     We finally decided to select the **"Heart Disease" dataset**. The data was published by David Aha in 1988 and consists of data from four different clinics: Cleveland, Hungary, Switzerland, and Long Beach V. While the original version consists of 76 attributes, only **14 attributes** are available and are commonly used for analysis. It includes **920 samples**. The "num" column refers to the predicted variable (0 if no disease was found and != 0 if a disease was found).
 
-    Our rationale for selecting it was not only that it appeared the **most interesting for our team**, but also its **good documentation**, how well it is known, and lastly, its relevance given the fact that it is the **leading cause of death worldwide** (except Africa) and that it is estimated that **90% of all cases are preventable**.
+    Our rationale for selecting it was not only that it appeared the **most interesting for our team**, but also its **good documentation**, how well it is known, and lastly, its relevance given that heart disease is the **leading cause of death worldwide** (except Africa) and that it is estimated that **90% of all cases are preventable**.
     
     ---
    """
