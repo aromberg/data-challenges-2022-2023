@@ -64,7 +64,7 @@ st.plotly_chart(hist, use_container_width=True)
 
 st.write("Zooming in on possibly fitting datasets with sample sizes < 5000:")
 
-df_zoom = df_hist[df["Sample size"] < 5000]
+df_zoom = df_hist.loc[df["Sample size"] < 5000]
 hist_zoomed = px.histogram(df_zoom, x="Sample size", nbins=25)
 st.plotly_chart(hist_zoomed, use_container_width=True)
 
