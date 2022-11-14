@@ -33,32 +33,35 @@ data_imp = data_imp.drop(columns=['trestbps'])
 
 st.markdown('mean imputation for chol')
 data_imp['chol'] = data_imp['chol'].fillna(data_imp['chol'].mean())
-null_values = data['chol'].isnull()
 # visualize results
-fig, ax = plt.subplots()
-ax.scatter(data_imp['age'], data_imp['chol'])
-plot = plt.scatter(data_imp[np.isnan(data['chol'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp['age'], data_imp['chol'])
+plt.scatter(data_imp[np.isnan(data['chol'])]['age'],
  data_imp[np.isnan(data['chol'])]['chol'])
+plt.xlabel('age')
+plt.ylabel('chol')
 st.pyplot(fig)
 
 st.markdown('mean imputation for thalach')
 data_imp['thalach'] = data_imp['thalach'].fillna(data_imp['thalach'].mean())
-null_values = data['oldpeak'].isnull()
 # visualize results
-fig, ax = plt.subplots()
-ax.scatter(data_imp['age'], data_imp['thalach'])
-plot = plt.scatter(data_imp[np.isnan(data['thalach'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp['age'], data_imp['thalach'])
+plt.scatter(data_imp[np.isnan(data['thalach'])]['age'],
  data_imp[np.isnan(data['thalach'])]['thalach'])
+plt.xlabel('age')
+plt.ylabel('thalach')
 st.pyplot(fig)
 
 st.markdown('mean imputation for oldpeak')
 data_imp['oldpeak'] = data_imp['oldpeak'].fillna(data_imp['oldpeak'].mean())
-null_values = data['oldpeak'].isnull()
 # visualize results
-fig, ax = plt.subplots()
-ax.scatter(data_imp['age'], data_imp['oldpeak'])
-plot = plt.scatter(data_imp[np.isnan(data['oldpeak'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp['age'], data_imp['oldpeak'])
+plt.scatter(data_imp[np.isnan(data['oldpeak'])]['age'],
  data_imp[np.isnan(data['oldpeak'])]['oldpeak'])
+plt.xlabel('age')
+plt.ylabel('oldpeak')
 st.pyplot(fig)
 
 st.markdown('calculate modes for each categorial variable for both male and female')
@@ -85,10 +88,12 @@ filepath.parent.mkdir(parents=True, exist_ok=True)
 data_imp.to_csv(filepath, index=False)
 
 # visualize results
-fig, ax = plt.subplots()
-ax.scatter(data_imp['age'], data_imp['thal'])
-plot = plt.scatter(data_imp[np.isnan(data['thal'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp['age'], data_imp['thal'])
+plt.scatter(data_imp[np.isnan(data['thal'])]['age'],
  data_imp[np.isnan(data['thal'])]['thal'])
+plt.xlabel('age')
+plt.ylabel('thal')
 st.pyplot(fig)
 
 st.markdown('mean imputation for subgroups divided in male and female')
@@ -99,14 +104,18 @@ data_imp_male['oldpeak'] = data_imp_male['oldpeak'].fillna(data_imp_male['oldpea
 data_imp_female['oldpeak'] = data_imp_female['oldpeak'].fillna(data_imp_female['oldpeak'].mean())
 
 # visualize results
-fig, ax = plt.subplots()
-ax.scatter(data_imp_male['age'], data_imp_male['oldpeak'])
-plot = plt.scatter(data_imp_male[np.isnan(data[data['sex']==1].copy()['oldpeak'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp_male['age'], data_imp_male['oldpeak'])
+plt.scatter(data_imp_male[np.isnan(data[data['sex']==1].copy()['oldpeak'])]['age'],
                    data_imp_male[np.isnan(data[data['sex']==1].copy()['oldpeak'])]['oldpeak'])
+plt.xlabel('age')
+plt.ylabel('oldpeak')
 st.pyplot(fig)
 
-fig, ax = plt.subplots()
-ax.scatter(data_imp_female['age'], data_imp_female['oldpeak'])
-plot = plt.scatter(data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['age'],
+fig = plt.figure()
+plt.scatter(data_imp_female['age'], data_imp_female['oldpeak'])
+plt.scatter(data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['age'],
                    data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['oldpeak'])
+plt.xlabel('age')
+plt.ylabel('oldpeak')
 st.pyplot(fig)
