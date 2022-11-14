@@ -63,9 +63,11 @@ transformed_tsne = pd.DataFrame(tsne)
 transformed_tsne["sex"] = all["sex"]
 
 figure2 = plt.figure()
-plt.scatter((transformed_tsne[transformed_tsne.sex == 0])[0], (transformed_tsne[transformed_tsne.sex == 0])[1])
-plt.scatter((transformed_tsne[transformed_tsne.sex == 1])[0], (transformed_tsne[transformed_tsne.sex == 1])[1])
-
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((transformed_tsne[transformed_tsne.sex == 0])[0], (transformed_tsne[transformed_tsne.sex == 0])[1])
+    plt.scatter((transformed_tsne[transformed_tsne.sex == 1])[0], (transformed_tsne[transformed_tsne.sex == 1])[1])
+else:
+    plt.scatter((transformed_tsne)[0], (transformed_tsne)[1])
 #plt.scatter(transformed_tsne[0],transformed_tsne[1])
 st.pyplot(figure2)
 
