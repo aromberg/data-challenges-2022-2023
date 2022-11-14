@@ -145,6 +145,12 @@ plt.ylabel('oldpeak')
 plt.title('Mean Imputation for Females')
 st.pyplot(fig)
 
+# save results
+from pathlib import Path
+filepath = Path('data/data_imp.csv')
+filepath.parent.mkdir(parents=True, exist_ok=True)
+data_imp.to_csv(filepath, index=False)
+
 # concat male and female datasets
 data_imp = pd.concat([data_imp_male, data_imp_female]).sort_index()
 fig = plt.figure()
@@ -156,8 +162,4 @@ plt.ylabel('oldpeak')
 plt.title('Mean Imputation for Males and Females')
 st.pyplot(fig)
 
-# save results
-from pathlib import Path
-filepath = Path('data/data_imp.csv')
-filepath.parent.mkdir(parents=True, exist_ok=True)
-data_imp.to_csv(filepath, index=False)
+
