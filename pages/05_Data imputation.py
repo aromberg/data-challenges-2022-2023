@@ -158,6 +158,6 @@ st.pyplot(fig)
 
 # save results
 from pathlib import Path
-filepath = Path('../data/data_imp.csv')
+filepath = Path('data/data_imp.csv')
 filepath.parent.mkdir(parents=True, exist_ok=True)
 data_imp.to_csv(filepath, index=False)
