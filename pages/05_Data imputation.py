@@ -8,13 +8,17 @@ st.set_page_config(page_title="Data Imputation",
 
 st.markdown("# Data Imputation")
 
-st.markdown('dataset')
+st.markdown('We printed a preview of the dataset.')
 # load dataset
 data = pd.read_csv("data/heart_disease/heart_disease_combined.csv", sep=",",
  index_col=0)
 st.dataframe(data.head())
 
-st.markdown('calculate means for each continuous variable for both male and female')
+st.markdown('We calculated the means for each continuous variable for both \
+ male and female to identify differences in the data. We can see that data \
+ of variable "trestbps" seems to be similiar for males and females. That \
+ is why we deleted this column.')
+
 data_male = data[data['sex'] == 1]
 data_female = data[data['sex'] == 0]
 
@@ -31,7 +35,9 @@ st.dataframe(means)
 data_imp = data.copy()
 data_imp = data_imp.drop(columns=['trestbps'])
 
-st.markdown('mean imputation for chol')
+st.markdown('## Mean Imputation for "chol"')
+st.markdown('The blue datapoints represent the complete datapoints and \
+and the orange datapoints represent the datapoints where we imputet the mean.')
 data_imp['chol'] = data_imp['chol'].fillna(data_imp['chol'].mean())
 # visualize results
 fig = plt.figure()
@@ -42,7 +48,7 @@ plt.xlabel('age')
 plt.ylabel('chol')
 st.pyplot(fig)
 
-st.markdown('mean imputation for thalach')
+st.markdown('## Mean Imputation for "thalach"')
 data_imp['thalach'] = data_imp['thalach'].fillna(data_imp['thalach'].mean())
 # visualize results
 fig = plt.figure()
@@ -53,7 +59,7 @@ plt.xlabel('age')
 plt.ylabel('thalach')
 st.pyplot(fig)
 
-st.markdown('mean imputation for oldpeak')
+st.markdown('## Mean Imputation for "oldpeak"')
 data_imp['oldpeak'] = data_imp['oldpeak'].fillna(data_imp['oldpeak'].mean())
 # visualize results
 fig = plt.figure()
@@ -64,19 +70,22 @@ plt.xlabel('age')
 plt.ylabel('oldpeak')
 st.pyplot(fig)
 
-st.markdown('calculate modes for each categorial variable for both male and female')
+st.markdown('Analogous to the continuous variable we calculated the modes for \
+each categorial variable for both male and female and delete all columns \
+which indicate no difference.')
 modes_male = data_male.mode().iloc[0]
 modes_female = data_female.mode().iloc[0]
 
 modes = pd.DataFrame([modes_male, modes_female])
 modes.index = ['male', 'female']
-modes = modes.drop(['age','sex','trestbps','chol','thalach','oldpeak','num'], axis=1)
+modes = modes.drop(['age','sex','trestbps','chol','thalach','oldpeak','num'],
+ axis=1)
 st.dataframe(modes)
 
 # delete variables where is no difference in male and female
 data_imp = data_imp.drop(columns=['cp','fbs','restecg','exang','slope','ca'])
 
-
+st.markdown('## Mode Imputation for "thal"')
 # mode imputation
 data_imp['thal'] = data_imp['thal'].fillna(int(data_imp['thal'].mode()))
 null_values = data['thal'].isnull()
@@ -96,18 +105,23 @@ plt.xlabel('age')
 plt.ylabel('thal')
 st.pyplot(fig)
 
-st.markdown('mean imputation for subgroups divided in male and female')
+st.markdown('## Mean Imputation for subgroups')
+st.markdown('To check how the imputation values differ if we apply them to \
+subgroups we divided the dataset in males and females.')
 data_imp_male = data[data['sex']==1].copy()
 data_imp_female = data[data['sex']==0].copy()
 
-data_imp_male['oldpeak'] = data_imp_male['oldpeak'].fillna(data_imp_male['oldpeak'].mean())
-data_imp_female['oldpeak'] = data_imp_female['oldpeak'].fillna(data_imp_female['oldpeak'].mean())
+data_imp_male['oldpeak'] = \
+data_imp_male['oldpeak'].fillna(data_imp_male['oldpeak'].mean())
+data_imp_female['oldpeak'] = \
+data_imp_female['oldpeak'].fillna(data_imp_female['oldpeak'].mean())
 
 # visualize results
 fig = plt.figure()
 plt.scatter(data_imp_male['age'], data_imp_male['oldpeak'])
-plt.scatter(data_imp_male[np.isnan(data[data['sex']==1].copy()['oldpeak'])]['age'],
-                   data_imp_male[np.isnan(data[data['sex']==1].copy()['oldpeak'])]['oldpeak'])
+plt.scatter(data_imp_male[np.isnan(data[data['sex']==1]. \
+copy()['oldpeak'])]['age'],data_imp_male[ \
+np.isnan(data[data['sex']==1].copy()['oldpeak'])]['oldpeak'])
 plt.xlabel('age')
 plt.ylabel('oldpeak')
 st.pyplot(fig)
@@ -115,7 +129,7 @@ st.pyplot(fig)
 fig = plt.figure()
 plt.scatter(data_imp_female['age'], data_imp_female['oldpeak'])
 plt.scatter(data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['age'],
-                   data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['oldpeak'])
+    data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['oldpeak'])
 plt.xlabel('age')
 plt.ylabel('oldpeak')
 st.pyplot(fig)
