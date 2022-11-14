@@ -38,7 +38,7 @@ transformed_pca = pd.DataFrame(transformed_pca)
 # plot ###
 
 x_achsis = st.selectbox("select the PC displayed on the x-achsis",transformed_pca.columns)
-y_achsis = st.selectbox("select the PC displayed on the y-achsis",transformed_pca.columns)
+y_achsis = st.selectbox("select the PC displayed on the y-achsis",transformed_pca.columns, index=1)
 
 figure = plt.figure()
 
