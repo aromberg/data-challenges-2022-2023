@@ -14,7 +14,7 @@ st.markdown("# Dimensionality Reduction")
 
 ### preparing data #########
 
-all = pd.read_csv("./../data/data_imp.csv")
+all = pd.read_csv("data/data_imp.csv")
 
 feature = st.selectbox("Select the feature by which to seperate the data",all.columns)
 if feature != None:
