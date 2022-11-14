@@ -90,12 +90,6 @@ st.markdown('## Mode Imputation for "thal"')
 data_imp['thal'] = data_imp['thal'].fillna(int(data_imp['thal'].mode()))
 null_values = data['thal'].isnull()
 
-# save results
-from pathlib import Path
-filepath = Path('../data/data_imp.csv')
-filepath.parent.mkdir(parents=True, exist_ok=True)
-data_imp.to_csv(filepath, index=False)
-
 # visualize results
 fig = plt.figure()
 plt.scatter(data_imp['age'], data_imp['thal'])
@@ -111,10 +105,25 @@ subgroups we divided the dataset in males and females.')
 data_imp_male = data[data['sex']==1].copy()
 data_imp_female = data[data['sex']==0].copy()
 
+data_imp_male['chol'] = \
+data_imp_male['chol'].fillna(data_imp_male['chol'].mean())
+data_imp_female['chol'] = \
+data_imp_female['chol'].fillna(data_imp_female['chol'].mean())
+
+data_imp_male['thalach'] = \
+data_imp_male['thalach'].fillna(data_imp_male['thalach'].mean())
+data_imp_female['thalach'] = \
+data_imp_female['thalach'].fillna(data_imp_female['thalach'].mean())
+
 data_imp_male['oldpeak'] = \
 data_imp_male['oldpeak'].fillna(data_imp_male['oldpeak'].mean())
 data_imp_female['oldpeak'] = \
 data_imp_female['oldpeak'].fillna(data_imp_female['oldpeak'].mean())
+
+data_imp_male['thal'] = \
+data_imp_male['thal'].fillna(data_imp_male['thal'].mode())
+data_imp_female['thal'] = \
+data_imp_female['thal'].fillna(data_imp_female['thal'].mode())
 
 # visualize results
 fig = plt.figure()
@@ -124,6 +133,7 @@ copy()['oldpeak'])]['age'],data_imp_male[ \
 np.isnan(data[data['sex']==1].copy()['oldpeak'])]['oldpeak'])
 plt.xlabel('age')
 plt.ylabel('oldpeak')
+plt.title('Mean Imputation for Males')
 st.pyplot(fig)
 
 fig = plt.figure()
@@ -132,4 +142,22 @@ plt.scatter(data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['age'],
     data_imp_female[np.isnan(data[data['sex']==0]['oldpeak'])]['oldpeak'])
 plt.xlabel('age')
 plt.ylabel('oldpeak')
+plt.title('Mean Imputation for Females')
 st.pyplot(fig)
+
+# concat male and female datasets
+data_imp = pd.concat([data_imp_male, data_imp_female]).sort_index()
+fig = plt.figure()
+plt.scatter(data_imp['age'], data_imp['oldpeak'])
+plt.scatter(data_imp[np.isnan(data['oldpeak'])]['age'],
+    data_imp[np.isnan(data['oldpeak'])]['oldpeak'])
+plt.xlabel('age')
+plt.ylabel('oldpeak')
+plt.title('Mean Imputation for Males and Females')
+st.pyplot(fig)
+
+# save results
+from pathlib import Path
+filepath = Path('../data/data_imp.csv')
+filepath.parent.mkdir(parents=True, exist_ok=True)
+data_imp.to_csv(filepath, index=False)
