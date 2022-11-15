@@ -6,6 +6,7 @@ import streamlit as st
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
+import umap
 
 st.set_page_config(page_title="Dimensionality Reduction",
                    page_icon="📌")
@@ -73,11 +74,29 @@ if (len(pd.unique(all["sex"])) > 1):
     plt.scatter((transformed_tsne[transformed_tsne.sex == 1])[0], (transformed_tsne[transformed_tsne.sex == 1])[1])
 else:
     plt.scatter((transformed_tsne)[0], (transformed_tsne)[1])
-#plt.scatter(transformed_tsne[0],transformed_tsne[1])
 st.pyplot(figure2)
 
 ######################
-
+st.markdown("## UMAP")
 ## UMAP ##############
+umaped = umap.UMAP()
+umaped_transformed = umaped.fit_transform(all)
+
+umaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
+    plt.scatter((umaped_transformed[umaped_transformed.sex == 1])[0], (umaped_transformed[umaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((umaped_transformed)[0], (umaped_transformed)[1])
+st.pyplot(figure2)
 
 #####################
+
+#### trimap ###########
+
+#######################
+
+### pacmap ############
+
+######################
