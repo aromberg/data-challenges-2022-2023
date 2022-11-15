@@ -27,6 +27,11 @@ if feature != None:
         all = all.loc[all[feature] >= cut_off]
     else:
         all = all.loc[all[feature] <= cut_off]
+
+if len(all["sex"]) < 1:
+    st.markdown("## Error <br> The chosen datasubset is too small. As a default the whole Dataset is chosen")
+    all = pd.read_csv("data/data_imp.csv")
+
 #######################
 st.markdown(" ## PCA")
 ### PCA ###############
