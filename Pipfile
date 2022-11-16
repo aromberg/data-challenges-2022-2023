@@ -10,6 +10,7 @@ jupyter = "*"
 matplotlib = "*"
 plotly = "*"
 scikit-learn = "*"
+umap-learn = "*"
 
 [dev-packages]
 
