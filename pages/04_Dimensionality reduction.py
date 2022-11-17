@@ -31,7 +31,7 @@ if feature != None:
     else:
         all = all.loc[all[feature] <= cut_off]
 
-if len(all["sex"]) < 1:
+if len(all["sex"].index) < 1:
     st.markdown("## Error <br> The chosen datasubset is too small. As a default the whole Dataset is chosen")
     all = pd.read_csv("data/data_imp.csv")
 
@@ -85,6 +85,7 @@ umaped = umap.UMAP()
 umaped_transformed = umaped.fit_transform(all)
 
 umaped_transformed["sex"] = all["sex"]
+
 figure2 = plt.figure()
 if (len(pd.unique(all["sex"])) > 1):
     plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
