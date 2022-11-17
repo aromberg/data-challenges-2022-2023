@@ -7,6 +7,8 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 import umap
+import trimap
+import pacmap
 
 st.set_page_config(page_title="Dimensionality Reduction",
                    page_icon="📌")
@@ -79,24 +81,48 @@ st.pyplot(figure2)
 ######################
 st.markdown("## UMAP")
 ## UMAP ##############
-umaped = umap.UMAP()
-umaped_transformed = umaped.fit_transform(all)
+# umaped = umap.UMAP()
+# umaped_transformed = umaped.fit_transform(all)
 
-umaped_transformed["sex"] = all["sex"]
-figure2 = plt.figure()
-if (len(pd.unique(all["sex"])) > 1):
-    plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
-    plt.scatter((umaped_transformed[umaped_transformed.sex == 1])[0], (umaped_transformed[umaped_transformed.sex == 1])[1])
-else:
-    plt.scatter((umaped_transformed)[0], (umaped_transformed)[1])
-st.pyplot(figure2)
+# umaped_transformed["sex"] = all["sex"]
+# figure2 = plt.figure()
+# if (len(pd.unique(all["sex"])) > 1):
+#     plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
+#     plt.scatter((umaped_transformed[umaped_transformed.sex == 1])[0], (umaped_transformed[umaped_transformed.sex == 1])[1])
+# else:
+#     plt.scatter((umaped_transformed)[0], (umaped_transformed)[1])
+# st.pyplot(figure2)
 
 #####################
-
+st.markdown("## TriMAP")
 #### trimap ###########
 
-#######################
+trimaped = trimap.TRIMAP()
+trimaped_transformed = trimaped.fit_transform(all)
 
+trimaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((trimaped_transformed[trimaped_transformed.sex == 0])[0], (trimaped_transformed[trimaped_transformed.sex == 0])[1])
+    plt.scatter((trimaped_transformed[trimaped_transformed.sex == 1])[0], (trimaped_transformed[trimaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((trimaped_transformed)[0], (trimaped_transformed)[1])
+st.pyplot(figure2)
+
+#######################
+st.markdown("## PaCMAP")
 ### pacmap ############
+
+pacmaped = pacmap.PaCMAP()
+pacmaped_transformed = pacmaped.fit_transform(all)
+
+pacmaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 0])[0], (pacmaped_transformed[pacmaped_transformed.sex == 0])[1])
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 1])[0], (pacmaped_transformed[pacmaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((pacmaped_transformed)[0], (pacmaped_transformed)[1])
+st.pyplot(figure2)
 
 ######################
