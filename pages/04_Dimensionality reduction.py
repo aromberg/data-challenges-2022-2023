@@ -81,17 +81,17 @@ st.pyplot(figure2)
 ######################
 st.markdown("## UMAP")
 ## UMAP ##############
-# umaped = umap.UMAP()
-# umaped_transformed = umaped.fit_transform(all)
+umaped = umap.UMAP()
+umaped_transformed = umaped.fit_transform(all)
 
-# umaped_transformed["sex"] = all["sex"]
-# figure2 = plt.figure()
-# if (len(pd.unique(all["sex"])) > 1):
-#     plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
-#     plt.scatter((umaped_transformed[umaped_transformed.sex == 1])[0], (umaped_transformed[umaped_transformed.sex == 1])[1])
-# else:
-#     plt.scatter((umaped_transformed)[0], (umaped_transformed)[1])
-# st.pyplot(figure2)
+umaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((umaped_transformed[umaped_transformed.sex == 0])[0], (umaped_transformed[umaped_transformed.sex == 0])[1])
+    plt.scatter((umaped_transformed[umaped_transformed.sex == 1])[0], (umaped_transformed[umaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((umaped_transformed)[0], (umaped_transformed)[1])
+st.pyplot(figure2)
 
 #####################
 st.markdown("## TriMAP")
