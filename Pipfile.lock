@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e0ca35147c900735b0b3a82b81e3bf1528b747d9fca1a310596b9ffb9d9db463"
+            "sha256": "32b088c1f1c9afc72041ada60f82fb39405f5576f78b48fc163c480855e508f2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==4.2.0"
+        },
+        "annoy": {
+            "hashes": [
+                "sha256:bf177dbeafb81f63b2ac1e1246b1f26a2acc82e73ba46638734d29d8258122da",
+                "sha256:d15f03c8986f0d48244843cbfd706b4530047edb1700de463d034e8d10c89dbf"
+            ],
+            "version": "==1.17.1"
         },
         "anyio": {
             "hashes": [
@@ -488,11 +495,11 @@
         },
         "jupyter-client": {
             "hashes": [
-                "sha256:540b6a5c9c2dc481c5dd54fd5acb260f03dfaaa7c5325b2ffb1f676710f8c7c4",
-                "sha256:f7f9a9dc3a0ecd223ed6a5a00cf4140a5c252ec72e52d6de370748ed0aa083dd"
+                "sha256:330f6b627e0b4bf2f54a3a0dd9e4a22d2b649c8518168afedce2c96a1ceb2860",
+                "sha256:df56ae23b8e1da1b66f89dee1368e948b24a7f780fa822c5735187589fc4c157"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==7.4.6"
+            "version": "==7.4.7"
         },
         "jupyter-console": {
             "hashes": [
@@ -881,6 +888,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==21.3"
+        },
+        "pacmap": {
+            "hashes": [
+                "sha256:96c4060fcf4fee1d75662f5761185f1868c76e5e251cc5541d0b0f9dcfa7d868",
+                "sha256:ed052010d8a1ef8c7836646fd56b812bcf675e0c5168c81140373273d36b29ea"
+            ],
+            "index": "pypi",
+            "version": "==0.6.5"
         },
         "pandas": {
             "hashes": [
@@ -1549,6 +1564,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==5.5.0"
+        },
+        "trimap": {
+            "hashes": [
+                "sha256:ff9f0895fe99136af14b8bb4c9e717dfea5f0018ccbd16980daaed32703cf6ff"
+            ],
+            "index": "pypi",
+            "version": "==1.1.4"
         },
         "typing-extensions": {
             "hashes": [

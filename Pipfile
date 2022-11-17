@@ -11,6 +11,8 @@ matplotlib = "*"
 plotly = "*"
 scikit-learn = "*"
 umap-learn = "*"
+trimap = "*"
+pacmap = "*"
 
 [dev-packages]
 
