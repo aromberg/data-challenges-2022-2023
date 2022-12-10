@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import make_column_transformer
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.metrics import pairwise_distances
+from sklearn.metrics import pairwise_distances, davies_bouldin_score, silhouette_score
 from sklearn.cluster import KMeans, DBSCAN, OPTICS
 from sklearn.decomposition import PCA
 import plotly.graph_objs as go
@@ -248,6 +248,18 @@ layout2 = dict(xaxis= dict(title=xlab, ticklen=5, zeroline=False),
 fig2 = dict(data=traces2, layout=layout2)
 st.plotly_chart(fig2)
 
+############################### Cluster evaluation ############################
+if len(np.unique(clusters)) > 1:
+    silhouette = silhouette_score(dat, clusters)
+    st.markdown("Silhouette Coefficient:")
+    st.write(silhouette)
+
+    davies_bouldin = davies_bouldin_score(dat, clusters)
+    st.markdown("Davies Bouldin index:")
+    st.write(davies_bouldin)
+else:
+    st.markdown("No evaluation can be calculated for one cluster")
+
 ###############################  DBSCAN ##########################################
 
 st.markdown(
@@ -367,6 +379,18 @@ fig2_dbscan = dict(data=traces2_dbscan, layout=layout2_dbscan)
 
 st.plotly_chart(fig2_dbscan)
 
+############################### Cluster evaluation ############################
+if len(np.unique(clusters_dbscan)) > 1:
+    silhouette = silhouette_score(dat_dbscan, clusters_dbscan)
+    st.markdown("Silhouette Coefficient:")
+    st.write(silhouette)
+
+    davies_bouldin = davies_bouldin_score(dat_dbscan, clusters_dbscan)
+    st.markdown("Davies Bouldin index:")
+    st.write(davies_bouldin)
+else:
+    st.markdown("No evaluation can be calculated for one cluster")
+
 ############################### OPTICS ##########################################
 
 st.markdown(
@@ -447,3 +471,14 @@ layout2_optics= dict(xaxis= dict(title=xlab_optics, ticklen=5, zeroline=False),
 fig2_optics = dict(data=traces2_optics, layout=layout2_optics)
 
 st.plotly_chart(fig2_optics)
+############################### Cluster evaluation ############################
+if len(np.unique(clusters_optics)) > 1:
+    silhouette = silhouette_score(dat_optics, clusters_optics)
+    st.markdown("Silhouette Coefficient:")
+    st.write(silhouette)
+
+    davies_bouldin = davies_bouldin_score(dat_optics, clusters_optics)
+    st.markdown("Davies Bouldin index:")
+    st.write(davies_bouldin)
+else:
+    st.markdown("No internal evaluation can be calculated for a single cluster")
