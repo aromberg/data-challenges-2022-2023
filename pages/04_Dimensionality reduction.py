@@ -98,23 +98,23 @@ st.pyplot(figure2)
 st.markdown("## TriMAP")
 #### trimap ###########
 
-trimaped = trimap.TRIMAP()
-trimaped_transformed = trimaped.fit_transform(all)
+# trimaped = trimap.TRIMAP()
+# trimaped_transformed = trimaped.fit_transform(all)
 
-trimaped_transformed["sex"] = all["sex"]
-figure2 = plt.figure()
-if (len(pd.unique(all["sex"])) > 1):
-    plt.scatter((trimaped_transformed[trimaped_transformed.sex == 0])[0], (trimaped_transformed[trimaped_transformed.sex == 0])[1])
-    plt.scatter((trimaped_transformed[trimaped_transformed.sex == 1])[0], (trimaped_transformed[trimaped_transformed.sex == 1])[1])
-else:
-    plt.scatter((trimaped_transformed)[0], (trimaped_transformed)[1])
-st.pyplot(figure2)
+# trimaped_transformed["sex"] = all["sex"]
+# figure2 = plt.figure()
+# if (len(pd.unique(all["sex"])) > 1):
+#     plt.scatter((trimaped_transformed[trimaped_transformed.sex == 0])[0], (trimaped_transformed[trimaped_transformed.sex == 0])[1])
+#     plt.scatter((trimaped_transformed[trimaped_transformed.sex == 1])[0], (trimaped_transformed[trimaped_transformed.sex == 1])[1])
+# else:
+#     plt.scatter((trimaped_transformed)[0], (trimaped_transformed)[1])
+# st.pyplot(figure2)
 
 #######################
 st.markdown("## PaCMAP")
 ### pacmap ############
 
-pacmaped = pacmap.PaCMAP()
+pacmaped = pacmap.PaCMAP(n_components=2, n_neighbors=None)
 pacmaped_transformed = pacmaped.fit_transform(all)
 
 pacmaped_transformed["sex"] = all["sex"]

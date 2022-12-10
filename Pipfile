@@ -13,6 +13,7 @@ scikit-learn = "*"
 umap-learn = "*"
 trimap = "*"
 pacmap = "*"
+umap = "*"
 
 [dev-packages]
 ipykernel = "*"
