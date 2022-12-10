@@ -81,8 +81,8 @@ st.pyplot(figure2)
 ######################
 st.markdown("## UMAP")
 ## UMAP ##############
-umaped = umap.UMAP()
-umaped_transformed = umaped.fit_transform(all)
+umaped = umap.UMAP().fit_transform(all)
+umaped_transformed = pd.DataFrame(umaped)
 
 umaped_transformed["sex"] = all["sex"]
 
@@ -98,8 +98,8 @@ st.pyplot(figure2)
 st.markdown("## TriMAP")
 #### trimap ###########
 
-# trimaped = trimap.TRIMAP()
-# trimaped_transformed = trimaped.fit_transform(all)
+# trimaped = trimap.TRIMAP().fit_transform(all)
+# trimaped_transformed = pd.DataFrame(trimaped)
 
 # trimaped_transformed["sex"] = all["sex"]
 # figure2 = plt.figure()
@@ -114,8 +114,8 @@ st.markdown("## TriMAP")
 st.markdown("## PaCMAP")
 ### pacmap ############
 
-pacmaped = pacmap.PaCMAP(n_components=2, n_neighbors=None)
-pacmaped_transformed = pacmaped.fit_transform(all)
+pacmaped = pacmap.PaCMAP(n_components=2, n_neighbors=None).fit_transform(all)
+pacmaped_transformed = pd.DataFrame(pacmaped)
 
 pacmaped_transformed["sex"] = all["sex"]
 figure2 = plt.figure()
