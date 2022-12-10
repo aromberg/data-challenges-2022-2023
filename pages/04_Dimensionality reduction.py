@@ -6,7 +6,7 @@ import streamlit as st
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
-import umap
+import umap.umap_ as umap
 import trimap
 import pacmap
 
