@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ca7156132d60b8f958cf14c252c94eb0a8b7fc0f3f7b6b49f4ca3bda99a57659"
+            "sha256": "e104fa91edc5b07f9092a7eb19df1bf6d6ce35202e7a7dbff741b29102f3eb86"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1726,14 +1726,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==4.2"
-        },
-        "umap": {
-            "hashes": [
-                "sha256:5d08c1a335cc7ee175811a99dc9356d3d4b8567ad082e2b1b205198cf27c4256",
-                "sha256:639f6be553f1bb13fe7f16754827be0ba9ab12371526c604ae641f7644bc47b1"
-            ],
-            "index": "pypi",
-            "version": "==0.1.1"
         },
         "umap-learn": {
             "hashes": [
