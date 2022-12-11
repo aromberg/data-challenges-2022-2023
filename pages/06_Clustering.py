@@ -192,14 +192,14 @@ st.markdown(
     """
 )
 
-k = st.slider('Number of Clusters', min_value=1, max_value=8)
+k = st.slider('Number of Clusters', value=3, min_value=1, max_value=8)
 init_method = st.selectbox("Initialization Method", ["k-means++", "random"],
                            help="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html")
 typ_kmeans = st.selectbox("Variables", ["numerical", "numerical and categorical"],
                    help="If 'numerical and categorical' is choosen, numerical variables will be standardized and categorical features will be encoded as one-hot numeric array")
 
 if typ_kmeans == "numerical":
-    stand = st.checkbox("Standardize features")
+    stand = st.checkbox("Standardize features", value=True)
 
 
 if init_method == "k-means++":
@@ -239,8 +239,8 @@ fig = dict(data=traces, layout=layout)
 
 st.plotly_chart(fig)
 
-xlab = st.selectbox("x axis", list(dat.columns))
-ylab = st.selectbox("y axis", list(dat.columns))
+xlab = st.selectbox("For k-means, what would you like to plot on the x axis?", list(dat.columns))
+ylab = st.selectbox("For k-means, what would you like to plot on the y axis?", list(dat.columns), index=5)
 traces2 = SubScatterCluster(clusters=x, cols=colors, xlabel=xlab,  ylabel=ylab)
 layout2 = dict(xaxis= dict(title=xlab, ticklen=5, zeroline=False),
                yaxis=dict(title=ylab, ticklen=5, zeroline=False))
@@ -369,8 +369,8 @@ fig_dbscan = dict(data=traces_dbscan, layout=layout)
 
 st.plotly_chart(fig_dbscan)
 
-xlab_dbscan = st.selectbox("x-label", list(dat_dbscan.columns))
-ylab_dbscan = st.selectbox("y-label", list(dat_dbscan.columns))
+xlab_dbscan = st.selectbox("For DBSCAN, what would you like to plot on the x axis?", list(dat_dbscan.columns))
+ylab_dbscan = st.selectbox("For DBSCAN, what would you like to plot on the y axis?", list(dat_dbscan.columns), index=5)
 traces2_dbscan = SubScatterCluster(clusters=x_dbscan, cols=colors, xlabel=xlab_dbscan, ylabel=ylab_dbscan)
 layout2_dbscan = dict(xaxis= dict(title=xlab_dbscan, ticklen=5, zeroline=False),
                yaxis=dict(title=ylab_dbscan, ticklen=5, zeroline=False))
@@ -462,8 +462,8 @@ fig_optics = dict(data=traces_optics, layout=layout)
 
 st.plotly_chart(fig_optics)
 
-xlab_optics = st.selectbox("x lab", list(dat_optics.columns))
-ylab_optics = st.selectbox("y lab", list(dat_optics.columns))
+xlab_optics = st.selectbox("For OPTICS, what would you like to plot on the x axis?", list(dat_optics.columns))
+ylab_optics = st.selectbox("For OPTICS, what would you like to plot on the y axis?", list(dat_optics.columns), index=5)
 traces2_optics = SubScatterCluster(clusters=x_optics, cols=colors, xlabel=xlab_optics, ylabel=ylab_optics)
 layout2_optics= dict(xaxis= dict(title=xlab_optics, ticklen=5, zeroline=False),
                yaxis=dict(title=ylab_optics, ticklen=5, zeroline=False))
