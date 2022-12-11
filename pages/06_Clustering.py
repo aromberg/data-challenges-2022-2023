@@ -243,7 +243,7 @@ xlab = st.selectbox("x axis", list(dat.columns))
 ylab = st.selectbox("y axis", list(dat.columns))
 traces2 = SubScatterCluster(clusters=x, cols=colors, xlabel=xlab,  ylabel=ylab)
 layout2 = dict(xaxis= dict(title=xlab, ticklen=5, zeroline=False),
-               yaxis=dict(title="Cluster", ticklen=5, zeroline=False))
+               yaxis=dict(title=ylab, ticklen=5, zeroline=False))
 
 fig2 = dict(data=traces2, layout=layout2)
 st.plotly_chart(fig2)
@@ -373,7 +373,7 @@ xlab_dbscan = st.selectbox("x-label", list(dat_dbscan.columns))
 ylab_dbscan = st.selectbox("y-label", list(dat_dbscan.columns))
 traces2_dbscan = SubScatterCluster(clusters=x_dbscan, cols=colors, xlabel=xlab_dbscan, ylabel=ylab_dbscan)
 layout2_dbscan = dict(xaxis= dict(title=xlab_dbscan, ticklen=5, zeroline=False),
-               yaxis=dict(title="Cluster", ticklen=5, zeroline=False))
+               yaxis=dict(title=ylab_dbscan, ticklen=5, zeroline=False))
 
 fig2_dbscan = dict(data=traces2_dbscan, layout=layout2_dbscan)
 
@@ -466,7 +466,7 @@ xlab_optics = st.selectbox("x lab", list(dat_optics.columns))
 ylab_optics = st.selectbox("y lab", list(dat_optics.columns))
 traces2_optics = SubScatterCluster(clusters=x_optics, cols=colors, xlabel=xlab_optics, ylabel=ylab_optics)
 layout2_optics= dict(xaxis= dict(title=xlab_optics, ticklen=5, zeroline=False),
-               yaxis=dict(title="Cluster", ticklen=5, zeroline=False))
+               yaxis=dict(title=ylab_optics, ticklen=5, zeroline=False))
 
 fig2_optics = dict(data=traces2_optics, layout=layout2_optics)
 
