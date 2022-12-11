@@ -100,16 +100,86 @@ def SubScatterCluster(clusters, cols, xlabel, ylabel):
     return ls
 
 
+def plot_clusters(df, n_clusters, xlab, ylab):
+    """
+    Plot clusters as PCA & column-based
+
+    Args:
+        df: data to plot
+        name: cluster method name for widget inputs
+        n_clusters: number of clusters
+
+    Returns:
+        None
+    """
+    pca_2d = PCA(n_components=2)
+    PCs_2d = pd.DataFrame(pca_2d.fit_transform(df.drop(["Clusters"], axis=1)))
+    PCs_2d.columns = ["PC1", "PC2"]
+    plotData = pd.concat([df, PCs_2d], axis=1, join="inner")
+    x = SubClusterDF(n_clusters, plotData)
+    traces = SubScatterCluster(clusters=x, cols=colors, xlabel="PC1", ylabel="PC2")
+    layout = dict(title="Cluster PCA Visualization",
+                xaxis= dict(title="PC1", ticklen=5, zeroline=False),
+                yaxis=dict(title="PC2", ticklen=5, zeroline=False))
+    fig = dict(data=traces, layout=layout)
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    traces2 = SubScatterCluster(clusters=x, cols=colors, xlabel=xlab,  ylabel=ylab)
+    layout2 = dict(xaxis= dict(title=xlab, ticklen=5, zeroline=False),
+                yaxis=dict(title=ylab, ticklen=5, zeroline=False))
+    fig2 = dict(data=traces2, layout=layout2)
+    st.plotly_chart(fig2, use_container_width=True)
+
+
+def convert_data(df):
+    """
+    Convert data to array for analysis.
+
+    Args:
+        df: pandas dataframe to convert
+
+    Returns:
+        data as array
+    """
+
+    # convert data to dictionary
+    data_dict = df.to_dict(orient='records')
+    vec = DictVectorizer()
+    # convert to array
+    return vec.fit_transform(data_dict).toarray()
+
+def evaluate_clusters(raw_data, clusters):
+    if len(np.unique(clusters)) > 1:
+        silhouette = silhouette_score(raw_data, clusters)
+        st.markdown("Silhouette Coefficient:")
+        st.write(silhouette)
+
+        davies_bouldin = davies_bouldin_score(raw_data, clusters)
+        st.markdown("Davies Bouldin index:")
+        st.write(davies_bouldin)
+    else:
+        st.markdown("No evaluation can be calculated for one cluster")
+
+def get_plot_labels(name, df):
+    xlab = st.selectbox(f"For {name}, what would you like to plot on the x axis?", list(df.columns))
+    ylab = st.selectbox(f"For {name}, what would you like to plot on the y axis?", list(df.columns), index=5)
+
+    return xlab, ylab
+
+
 ####################### Prepare Data ##########################################
 
-# read file
+# read files
 data = pd.read_csv("data/heart_disease/heart_disease_combined.csv")
-# drop coll Unnamed: 0 and rows with NAs
+data_imp = pd.read_csv("data/data_imp.csv")
+
+# drop coll Unnamed: 0 and rows with NAs for raw data set
 data = data.drop(labels="Unnamed: 0", axis=1)
 data = data.dropna(axis=0)
 
 # assign new dtypes
-dtyp = {"sex": "category",
+dtypes = {"sex": "category",
         "cp": "category",
         "restecg": "category",
         "fbs": "category",
@@ -119,10 +189,8 @@ dtyp = {"sex": "category",
         "thal": "category",
         "num": "category"}
 
-dat_unmod = data.astype(dtyp)
-# create a copy to avoid manipulating the original dataset
-dat = dat_unmod.copy()
-dat = dat.astype(dtyp)
+data = data.astype(dtypes)
+data_imp = data_imp.astype(dtypes)
 
 ####################### Define variables ######################################
 
@@ -149,11 +217,6 @@ colors = ["rgba(255, 128, 255, 0.8)",  # pink
           "rgba(255, 236, 139, 0.8)", # lightgoldenrod1
           "rgba(255, 105, 180, 0.8)"] # hotpink
 
-title = "Visualizing Clusters in Two Dimensions Using PCA"
-layout = dict(title=title,
-              xaxis= dict(title="PC1", ticklen=5, zeroline=False),
-              yaxis=dict(title="PC2", ticklen=5, zeroline=False))
-
 
 ############################### Set Page ##########################################
 
@@ -164,7 +227,7 @@ st.set_page_config(page_title="Clustering",
 
 st.markdown(
     """
-    # Clustering
+    # Clustering 🗺
     ## K-Means
 
     The K-Means clustering algorithm is usually applied on numerical data.
@@ -192,73 +255,52 @@ st.markdown(
     """
 )
 
+# inputs
 k = st.slider('Number of Clusters', value=3, min_value=1, max_value=8)
 init_method = st.selectbox("Initialization Method", ["k-means++", "random"],
                            help="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html")
-typ_kmeans = st.selectbox("Variables", ["numerical", "numerical and categorical"],
+kmeans_type = st.selectbox("Variables", ["numerical", "numerical and categorical"],
                    help="If 'numerical and categorical' is choosen, numerical variables will be standardized and categorical features will be encoded as one-hot numeric array")
 
-if typ_kmeans == "numerical":
+if kmeans_type == "numerical":
     stand = st.checkbox("Standardize features", value=True)
-
-
 if init_method == "k-means++":
     kmeans = KMeans(n_clusters=k, init=init_method)
 else:
     kmeans = KMeans(n_clusters=k, init=init_method, random_state=222)
-# convert dataframe to dict
 
-if typ_kmeans == "numerical and categorical":
-    dat = PreProcessing(data=dat, num=True, cat=True, mixed=True)
+# preprocess data
+if kmeans_type == "numerical and categorical":
+    data_kmeans = PreProcessing(data=data, num=True, cat=True, mixed=True)
+    data_kmeans_imp = PreProcessing(data=data_imp, num=True, cat=True, mixed=True)
 else:
     if stand:
-        dat = PreProcessing(data=dat, num=True)
-
-# connvert data to dictionary
-data_dict = dat.to_dict(orient='records')
-vec = DictVectorizer()
-# convert to array
-matrix = vec.fit_transform(data_dict).toarray()
+        data_kmeans = PreProcessing(data=data, num=True)
+        data_kmeans_imp = PreProcessing(data=data_imp, num=True)
+    else:
+        data_kmeans = data
+        data_kmeans_imp = data_imp
 
 # apply kmeans
-kmeans_ = kmeans.fit(matrix)
-
+kmeans_ = kmeans.fit(convert_data(data_kmeans))
 clusters = kmeans_.labels_
-# don't change original dataset
-dat["Clusters"] = clusters
+data_kmeans["Clusters"] = clusters
 
-############################### PCA prior to Visualization ####################
+kmeans_ = kmeans.fit(convert_data(data_kmeans_imp))
+clusters_imp = kmeans_.labels_
+data_kmeans_imp["Clusters"] = clusters_imp
 
-pca_2d = PCA(n_components=2)
-PCs_2d = pd.DataFrame(pca_2d.fit_transform(dat.drop(["Clusters"], axis=1)))
-PCs_2d.columns = ["PC1", "PC2"]
-plotData = pd.concat([dat, PCs_2d], axis=1, join="inner")
-x = SubClusterDF(k, plotData)
-traces = SubScatterCluster(clusters=x, cols=colors, xlabel="PC1", ylabel="PC2")
-fig = dict(data=traces, layout=layout)
+# output
+xlab, ylab = get_plot_labels("k-means", data_kmeans)
 
-st.plotly_chart(fig)
+col1, col2 = st.columns(2)
 
-xlab = st.selectbox("For k-means, what would you like to plot on the x axis?", list(dat.columns))
-ylab = st.selectbox("For k-means, what would you like to plot on the y axis?", list(dat.columns), index=5)
-traces2 = SubScatterCluster(clusters=x, cols=colors, xlabel=xlab,  ylabel=ylab)
-layout2 = dict(xaxis= dict(title=xlab, ticklen=5, zeroline=False),
-               yaxis=dict(title=ylab, ticklen=5, zeroline=False))
-
-fig2 = dict(data=traces2, layout=layout2)
-st.plotly_chart(fig2)
-
-############################### Cluster evaluation ############################
-if len(np.unique(clusters)) > 1:
-    silhouette = silhouette_score(dat, clusters)
-    st.markdown("Silhouette Coefficient:")
-    st.write(silhouette)
-
-    davies_bouldin = davies_bouldin_score(dat, clusters)
-    st.markdown("Davies Bouldin index:")
-    st.write(davies_bouldin)
-else:
-    st.markdown("No evaluation can be calculated for one cluster")
+with col1:
+    plot_clusters(data_kmeans, k, xlab, ylab)
+    evaluate_clusters(data_kmeans, clusters)
+with col2:
+    plot_clusters(data_kmeans_imp, k, xlab, ylab)
+    evaluate_clusters(data_kmeans_imp, clusters_imp)
 
 ###############################  DBSCAN ##########################################
 
@@ -268,15 +310,14 @@ st.markdown(
     """
 )
 
+data_dbscan = data.copy()
+data_dbscan_imp = data_imp.copy()
 
-typ_dbscan = st.selectbox("Variables", ["numerical", "categorical", "both"],
+# inputs & preprocessing
+dbscan_type = st.selectbox("Variables", ["numerical", "categorical", "both"],
                    help="to which type of variables DBSCAN should be applied")
 
-dat_dbscan = dat_unmod.copy()
-
-
-
-if typ_dbscan == "both":
+if dbscan_type == "both":
     met_dbscan = st.selectbox("Distance Metric", ["gower"])
     st.markdown(
         """
@@ -287,9 +328,10 @@ if typ_dbscan == "both":
         whereas the dice coefficient which is similar to the jaccard coefficient is used for categorical variables.
         """
     )
-    dat_dbscan = PreProcessing(dat_dbscan, cat=True, mixed=True)  # only performs one-hot encoder
+    data_dbscan = PreProcessing(data_dbscan, cat=True, mixed=True)  # only perform one-hot encoder
+    data_dbscan_imp = PreProcessing(data_dbscan_imp, cat=True, mixed=True) # same here
 
-elif typ_dbscan == "categorical":
+elif dbscan_type == "categorical":
     met_dbscan = st.selectbox("Distance Metric", ["jaccard", "dice"])
     st.markdown(
         """
@@ -299,9 +341,10 @@ elif typ_dbscan == "categorical":
         a mismatch. Therfore match and mismatch are assigned equal weights.
         """
     )
-    dat_dbscan = PreProcessing(dat_dbscan, cat=True)
+    data_dbscan = PreProcessing(data_dbscan, cat=True)
+    data_dbscan_imp = PreProcessing(data_dbscan_imp, cat=True)
 
-elif typ_dbscan == "numerical":
+elif dbscan_type == "numerical":
     met_dbscan = st.selectbox("Distance Metric", ["euclidean", "manhattan"])
     if met_dbscan == "euclidean":
         st.markdown(
@@ -309,34 +352,27 @@ elif typ_dbscan == "numerical":
             For euclidean distance, numerical values will be standardized.
             """
         )
-        dat_dbscan = PreProcessing(dat_dbscan, num=True)
-
+        data_dbscan = PreProcessing(data_dbscan, num=True)
+        data_dbscan_imp = PreProcessing(data_dbscan_imp, num=True)
     elif met_dbscan == "manhattan":
-        dat_dbscan = dat_dbscan[list(dat_dbscan.columns[dat_dbscan.dtypes != 'category'])]
+        data_dbscan = data_dbscan[list(data_dbscan.columns[data_dbscan.dtypes != 'category'])]
+        data_dbscan_imp = data_dbscan_imp[list(data_dbscan_imp.columns[data_dbscan_imp.dtypes != 'category'])]
 
-
-
-
-# connvert data to dictionary
-data_dict_dbscan = dat_dbscan.to_dict(orient='records')
-vec_dbscan = DictVectorizer()
-# convert to array
-matrix_dbscan = vec_dbscan.fit_transform(data_dict_dbscan).toarray()
-
-# compute distance matrix
+# compute distance matrices
 if met_dbscan == "gower":
-    dist_matrix_dbscan = gower.gower_matrix(dat_dbscan)
-
+    dist_matrix_dbscan = gower.gower_matrix(data_dbscan)
+    dist_matrix_dbscan_imp = gower.gower_matrix(data_dbscan_imp)
 else:
-    dist_matrix_dbscan = pairwise_distances(matrix_dbscan, metric=met_dbscan)
+    dist_matrix_dbscan = pairwise_distances(convert_data(data_dbscan), metric=met_dbscan)
+    dist_matrix_dbscan_imp = pairwise_distances(convert_data(data_dbscan_imp), metric=met_dbscan)
 
 
+# further inputs (dependend on distance matrix)
 min_samp_dbscan = st.slider('Minimum number of samples',
                      min_value=1,
                      max_value=30,
                      help="The number of samples in a neighborhood for a point to be considered as a core point")
-
-if typ_dbscan == "both" or typ_dbscan == "categorical":
+if dbscan_type == "both" or dbscan_type == "categorical":
     radius = st.slider('Radius',
                        min_value=0.01,
                        max_value=1.0,
@@ -348,48 +384,29 @@ else:
                        max_value=max_eps,
                        step=0.25,
                        help="from a core point, other datapoints are close if they lie within radius")
-# create DBSCAN object
-dbscan = DBSCAN(eps=radius, min_samples=min_samp_dbscan, metric="precomputed")
 
 # apply DBSCAN
+dbscan = DBSCAN(eps=radius, min_samples=min_samp_dbscan, metric="precomputed")
 dbscan_ = dbscan.fit(dist_matrix_dbscan)
 clusters_dbscan = dbscan_.labels_
+data_dbscan["Clusters"] = clusters_dbscan
 
-dat_dbscan["Clusters"] = clusters_dbscan
+dbscan_ = dbscan.fit(dist_matrix_dbscan_imp)
+clusters_dbscan_imp = dbscan_.labels_
+data_dbscan_imp["Clusters"] = clusters_dbscan_imp
 
-############################### PCA prior to Visualization ####################
 
-pca_2d_dbscan = PCA(n_components=2)
-PCs_2d_dbscan = pd.DataFrame(pca_2d_dbscan.fit_transform(dat_dbscan.drop(["Clusters"], axis=1)))
-PCs_2d_dbscan.columns = ["PC1", "PC2"]
-plotData_dbscan = pd.concat([dat_dbscan, PCs_2d_dbscan], axis=1, join="inner")
-x_dbscan = SubClusterDF(len(clusters_dbscan), plotData_dbscan)
-traces_dbscan = SubScatterCluster(clusters=x_dbscan, cols=colors, xlabel="PC1", ylabel="PC2")
-fig_dbscan = dict(data=traces_dbscan, layout=layout)
+# output
+xlab, ylab = get_plot_labels("DBSCAN", data_dbscan)
 
-st.plotly_chart(fig_dbscan)
+col1, col2 = st.columns(2)
 
-xlab_dbscan = st.selectbox("For DBSCAN, what would you like to plot on the x axis?", list(dat_dbscan.columns))
-ylab_dbscan = st.selectbox("For DBSCAN, what would you like to plot on the y axis?", list(dat_dbscan.columns), index=5)
-traces2_dbscan = SubScatterCluster(clusters=x_dbscan, cols=colors, xlabel=xlab_dbscan, ylabel=ylab_dbscan)
-layout2_dbscan = dict(xaxis= dict(title=xlab_dbscan, ticklen=5, zeroline=False),
-               yaxis=dict(title=ylab_dbscan, ticklen=5, zeroline=False))
-
-fig2_dbscan = dict(data=traces2_dbscan, layout=layout2_dbscan)
-
-st.plotly_chart(fig2_dbscan)
-
-############################### Cluster evaluation ############################
-if len(np.unique(clusters_dbscan)) > 1:
-    silhouette = silhouette_score(dat_dbscan, clusters_dbscan)
-    st.markdown("Silhouette Coefficient:")
-    st.write(silhouette)
-
-    davies_bouldin = davies_bouldin_score(dat_dbscan, clusters_dbscan)
-    st.markdown("Davies Bouldin index:")
-    st.write(davies_bouldin)
-else:
-    st.markdown("No evaluation can be calculated for one cluster")
+with col1:
+    plot_clusters(data_dbscan, len(clusters_dbscan), xlab, ylab)
+    evaluate_clusters(data_dbscan, clusters_dbscan)
+with col2:
+    plot_clusters(data_dbscan_imp, len(clusters_dbscan), xlab, ylab)
+    evaluate_clusters(data_dbscan_imp, clusters_dbscan_imp)
 
 ############################### OPTICS ##########################################
 
@@ -399,86 +416,67 @@ st.markdown(
     """
 )
 
-typ_optics = st.selectbox("variables", ["numerical", "categorical", "both"],
+optics_type = st.selectbox("variables", ["numerical", "categorical", "both"],
                           help="to which type of variables DBSCAN should be applied")
 
-dat_optics = dat_unmod.copy()
+data_optics = data.copy()
+data_optics_imp = data_imp.copy()
 
-if typ_optics == "both":
+# inputs & preprocessing
+if optics_type == "both":
     met_optics = st.selectbox("distance metric", ["gower"])
 
-    dat_optics = PreProcessing(dat_optics, cat=True, mixed=True)  # only performs one-hot encoder
-
-elif typ_optics == "categorical":
+    data_optics = PreProcessing(data_optics, cat=True, mixed=True)  # only perform one-hot encoder
+    data_optics_imp = PreProcessing(data_optics_imp, cat=True, mixed=True)  # same here!
+elif optics_type == "categorical":
     met_optics = st.selectbox("distance metric", ["jaccard", "dice"])
 
-    dat_optics = PreProcessing(dat_optics, cat=True)
-
-elif typ_optics == "numerical":
+    data_optics = PreProcessing(data_optics, cat=True)
+    data_optics_imp = PreProcessing(data_optics_imp, cat=True)
+elif optics_type == "numerical":
     met_optics = st.selectbox("distance metric", ["euclidean", "manhattan"])
     if met_optics == "euclidean":
-        dat_optics = PreProcessing(dat_optics, num=True)
-
+        data_optics = PreProcessing(data_optics, num=True)
+        data_optics_imp = PreProcessing(data_optics_imp, num=True)
+        
     elif met_optics == "manhattan":
-        dat_optics = dat_optics[list(dat_optics.columns[dat_optics.dtypes != 'category'])]
-
-
-
-# connvert data to dictionary
-data_dict_optics = dat_optics.to_dict(orient='records')
-vec_optics = DictVectorizer()
-# convert to array
-matrix_optics = vec_optics.fit_transform(data_dict_optics).toarray()
+        data_optics = data_optics[list(data_optics.columns[data_optics.dtypes != 'category'])]
+        data_optics_imp = data_optics_imp[list(data_optics_imp.columns[data_optics_imp.dtypes != 'category'])]
 
 # compute distance matrix
 if met_optics == "gower":
-    dist_matrix_optics = gower.gower_matrix(dat_optics)
+    dist_matrix_optics = gower.gower_matrix(data_optics)
+    dist_matrix_optics_imp = gower.gower_matrix(data_optics_imp)
 
 else:
-    dist_matrix_optics = pairwise_distances(matrix_optics, metric=met_optics)
+    dist_matrix_optics = pairwise_distances(convert_data(data_optics), metric=met_optics)
+    dist_matrix_optics_imp = pairwise_distances(convert_data(data_optics_imp), metric=met_optics)
 
 min_samp = st.slider('minimum number of samples',
                      min_value=1,
                      max_value=30,
                      help="The number of samples in a neighborhood for a point to be considered as a core point")
 
-optics = OPTICS(min_samples=min_samp, metric="precomputed")
 
 # apply OPTICS
+optics = OPTICS(min_samples=min_samp, metric="precomputed")
+
 optics_ = optics.fit(dist_matrix_optics)
 clusters_optics = optics_.labels_
+data_optics["Clusters"] = clusters_optics
 
-dat_optics["Clusters"] = clusters_optics
+optics_ = optics.fit(dist_matrix_optics_imp)
+clusters_optics_imp = optics_.labels_
+data_optics_imp["Clusters"] = clusters_optics_imp
 
-############################### PCA prior to Visualization ####################
+# output
+xlab, ylab = get_plot_labels("OPTICS", data_optics)
 
-pca_2d_optics = PCA(n_components=2)
-PCs_2d_optics = pd.DataFrame(pca_2d_optics.fit_transform(dat_optics.drop(["Clusters"], axis=1)))
-PCs_2d_optics.columns = ["PC1", "PC2"]
-plotData_optics = pd.concat([dat_optics, PCs_2d_optics], axis=1, join="inner")
-x_optics = SubClusterDF(len(clusters_optics), plotData_optics)
-traces_optics = SubScatterCluster(clusters=x_optics, cols=colors, xlabel="PC1", ylabel="PC2")
-fig_optics = dict(data=traces_optics, layout=layout)
+col1, col2 = st.columns(2)
 
-st.plotly_chart(fig_optics)
-
-xlab_optics = st.selectbox("For OPTICS, what would you like to plot on the x axis?", list(dat_optics.columns))
-ylab_optics = st.selectbox("For OPTICS, what would you like to plot on the y axis?", list(dat_optics.columns), index=5)
-traces2_optics = SubScatterCluster(clusters=x_optics, cols=colors, xlabel=xlab_optics, ylabel=ylab_optics)
-layout2_optics= dict(xaxis= dict(title=xlab_optics, ticklen=5, zeroline=False),
-               yaxis=dict(title=ylab_optics, ticklen=5, zeroline=False))
-
-fig2_optics = dict(data=traces2_optics, layout=layout2_optics)
-
-st.plotly_chart(fig2_optics)
-############################### Cluster evaluation ############################
-if len(np.unique(clusters_optics)) > 1:
-    silhouette = silhouette_score(dat_optics, clusters_optics)
-    st.markdown("Silhouette Coefficient:")
-    st.write(silhouette)
-
-    davies_bouldin = davies_bouldin_score(dat_optics, clusters_optics)
-    st.markdown("Davies Bouldin index:")
-    st.write(davies_bouldin)
-else:
-    st.markdown("No internal evaluation can be calculated for a single cluster")
+with col1:
+    plot_clusters(data_optics, len(clusters_optics), xlab, ylab)
+    evaluate_clusters(data_optics, clusters_optics)
+with col2:
+    plot_clusters(data_optics_imp, len(clusters_optics_imp), xlab, ylab)
+    evaluate_clusters(data_optics_imp, clusters_optics_imp)
