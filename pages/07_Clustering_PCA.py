@@ -6,7 +6,6 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from sklearn.cluster import OPTICS
 import matplotlib.pyplot as plt
-print('start code')
 st.markdown(
 """
 # Clustering PCA Data
@@ -14,7 +13,7 @@ st.markdown(
 Since PCA can only handle numeric data, we extract all numeric columns from the
 dataset.
 """)
-data = pd.read_csv("../data/data_imp.csv")
+data = pd.read_csv("data/data_imp.csv")
 data = data[["age","trestbps", "chol", "thalach", "oldpeak"]]
 st.dataframe(data.head())
 
