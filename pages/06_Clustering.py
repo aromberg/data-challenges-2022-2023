@@ -252,6 +252,17 @@ st.markdown(
 
     For visualization, we apply PCA after running K-Means to plot clusters in two dimensions. However, it is recomemended
     to [apply dimensionality reduction prior to K-Means](https://mclguide.readthedocs.io/en/latest/sklearn/clusterdim.html).
+    ## Cluster evaluation
+    ### Shilouette index
+    The shilouette index is one way to calculate the relationship between the intra cluster similarity and the inter cluster similarity. For more then 2 clusters the average is calculated. 
+    $$ I_s = \frac{d_inter - d_intra}{max(d_inter,d_intra)}$$
+    The values ranges from 1 to -1, where 1 means, that the inter cluster distance is large, while the intra cluster distance is low. 0 means, 
+    that there is no significant distance between the clusters and -1 means, that the clusters are assigned wrongly.
+    ### Davies Bouldin index
+    The Davies Bouldin index also represents the relationship between intra cluster similiarity and inter cluster similarity. This index is based around the cluster centroids. Intrasimilarity is 
+    the average distance from the centroid within the cluster and the inter cluster similarity is given by the distance between the cluster centroids. 
+    The similarity of two clusters is calculated as the sum of the two intra cluster distance divided by the inter cluster distance. The average over all cluster similarities gives the index value.
+    Better distinguished clusters resul in a lower index value.
     """
 )
 
