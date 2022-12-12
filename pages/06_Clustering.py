@@ -256,6 +256,7 @@ st.markdown(
     ### Shilouette index
     The shilouette index is one way to calculate the relationship between the intra cluster similarity and the inter cluster similarity. For more then 2 clusters the average is calculated. 
     $$ I_s = \frac{d_inter - d_intra}{max(d_inter,d_intra)}$$
+    With d_inter being the average distance between two objects in the same cluster and d_inter being the average distance between two objects of the two different clusters.
     The values ranges from 1 to -1, where 1 means, that the inter cluster distance is large, while the intra cluster distance is low. 0 means, 
     that there is no significant distance between the clusters and -1 means, that the clusters are assigned wrongly.
     ### Davies Bouldin index
