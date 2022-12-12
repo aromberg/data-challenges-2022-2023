@@ -30,6 +30,8 @@ x_axis = st.selectbox("Please select the PC displayed on the x-axis.",
 pca_data.columns)
 y_axis = st.selectbox("Please select the PC displayed on the y-axis.",
 pca_data.columns, index=1)
+sns.set(style="ticks", context="talk")
+plt.style.use("dark_background")
 fig = plt.figure()
 p = sns.scatterplot(data=pca_data, x=pca_data[x_axis], y=pca_data[y_axis],
 palette="deep")
