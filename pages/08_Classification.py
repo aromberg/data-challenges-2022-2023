@@ -58,7 +58,7 @@ y = data['hd'].copy()
 X_encode = pd.get_dummies(X, columns=['cp','restecg','slope','thal'])
 
 # split training and test data
-X_train, X_test, y_train, y_test = model_selection.train_test_split(X_encode, y, random_state=1)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X_encode, y, random_state=1, test_size=0.25)
 
 # delete sex feature
 data_without_sex = data.drop(['sex'], axis=1)
@@ -134,4 +134,115 @@ st.markdown(
 "The accuray is " + str(100 * round(score, 4)) + "%. So we have been able to \
 improve performance. Gender seems to be a medical criterion for predicting the \
 disease."
+)
+
+################################################################################
+
+# count male and female records
+counts_male = len(data[data['sex']==1])
+counts_female = len(data[data['sex']==0])
+
+# split dataset by gender
+data_male = data[data['sex'] == 1].copy()
+data_female = data[data['sex'] == 0].copy()
+
+counts_hd_yes_male = len(data_male[data_male['hd']==1])
+counts_hd_yes_female = len(data_female[data_female['hd']==1])
+
+st.markdown(
+"""
+## Gender-specific Decision Trees
+Now we create decision trees for both genders separately to see if we can \
+improve performance further. There are {} females and {} males in the dataset. \
+{} females and {} males have heart diseases. The imbalances could strongly influence the \
+classifier performances.
+""".format(counts_female, counts_male, counts_hd_yes_female, counts_hd_yes_male))
+
+# female
+
+# split features and targets
+X_female = data_female.iloc[:,:13].copy()
+y_female = data_female['hd'].copy()
+
+# encode categorial values
+X_encode_female = pd.get_dummies(X_female, columns=['cp','restecg','slope','thal'])
+
+# split training and test data
+X_train_female, X_test_female, y_train_female, y_test_female = \
+model_selection.train_test_split(X_encode_female, y_female, random_state=1, test_size=0.25)
+
+# create basic decision tree
+decision_tree_female = create_decision_tree(data, X_train_female, y_train_female, X_test_female, y_test_female)
+
+# visualize decision tree
+st.subheader('Female Decision Tree')
+tp = tree.plot_tree(decision_tree_female,
+              filled=True,
+              rounded=True,
+              class_names=['no_hd','yes_hd'],
+              feature_names=X_encode.columns)
+st.pyplot()
+
+st.subheader("Confusion Matrix for Female Decision Tree")
+metrics.plot_confusion_matrix(decision_tree_female, X_test_female, y_test_female, display_labels=['Does not have HD','Does have HD'])
+st.pyplot()
+
+# calculate accuracy
+y_pred_female = decision_tree_female.predict(X_test_female)
+score_female = metrics.accuracy_score(y_test_female, y_pred_female)
+score_female_str = str(100 * round(score_female, 4))
+
+st.markdown(
+"""
+The accuracy is {} %. A female-specific decision tree could not improve the performance.
+""".format(score_female_str)
+)
+
+# male
+
+# split features and targets
+X_male = data_male.iloc[:,:13].copy()
+y_male = data_male['hd'].copy()
+
+# encode categorial values
+X_encode_male = pd.get_dummies(X_male, columns=['cp','restecg','slope','thal'])
+
+# split training and test data
+X_train_male, X_test_male, y_train_male, y_test_male = \
+model_selection.train_test_split(X_encode_male, y_male, random_state=1, test_size=0.25)
+
+# create basic decision tree
+decision_tree_male = create_decision_tree(data, X_train_male, y_train_male, X_test_male, y_test_male)
+
+# visualize decision tree
+st.subheader('Male Decision Tree')
+tp = tree.plot_tree(decision_tree_male,
+              filled=True,
+              rounded=True,
+              class_names=['no_hd','yes_hd'],
+              feature_names=X_encode.columns)
+st.pyplot()
+
+st.subheader("Confusion Matrix for Male Decision Tree")
+metrics.plot_confusion_matrix(decision_tree_male, X_test_male, y_test_male, display_labels=['Does not have HD','Does have HD'])
+st.pyplot()
+
+# calculate accuracy
+y_pred_male = decision_tree_male.predict(X_test_male)
+score_male = metrics.accuracy_score(y_test_male, y_pred_male)
+score_male_str = str(100 * round(score_male, 4))
+
+st.markdown(
+"""
+The accuracy is {} %. A male-specific decision tree also failed to improve performance.
+""".format(score_male_str)
+)
+
+st.markdown(
+"""
+## Conclusion
+Overall, we found that the performance of the classifier can be improved by \
+considering gender in decision making. Gender-specific classifiers, on the other \
+hand, reduce performance. Possibly the overfit is the reason for this.
+"""
 )
