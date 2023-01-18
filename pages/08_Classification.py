@@ -4,6 +4,7 @@ from sklearn import tree
 from sklearn import model_selection
 from sklearn import metrics
 import matplotlib.pyplot as plt
+import numpy as np
 
 st.set_page_config(page_title="Classification")
 
@@ -27,20 +28,17 @@ def create_decision_tree(data, X_train, y_train, X_test, y_test):
     ccp_alphas = path.ccp_alphas
 
     accuray_max = 0
-    ccp_alpha_max = ccp_alphas[0]
     opt_decision_tree = None
 
     for ccp_alpha in ccp_alphas:
         dt = tree.DecisionTreeClassifier(random_state=0, ccp_alpha=ccp_alpha)
-        dt.fit(X_train, y_train)
-        y_pred = dt.predict(X_test)
-        score = metrics.accuracy_score(y_test, y_pred)
-        if score > accuray_max :
-            accuray_max = score
-            ccp_alpha_max = ccp_alpha
+        scores = model_selection.cross_val_score(dt, X_train, y_train, cv=5)
+        accuracy = np.mean(scores)
+        if accuracy > accuray_max :
+            accuray_max = accuracy
             opt_decision_tree = dt
 
-    return opt_decision_tree
+    return opt_decision_tree.fit(X_train, y_train)
 
 st.markdown(
 """
@@ -106,7 +104,7 @@ performance measure. The accuray is " + str(100 * round(score, 4)) + "%."
 
 st.markdown(
 """
-## Basic Decision Tree
+## Decision Tree with Gender Feature
 Now we take gender into account to see if it improves the classifier.
 """)
 
@@ -129,7 +127,7 @@ st.markdown(
 y_pred = decision_tree.predict(X_test)
 
 # calculate confusion matrix
-st.subheader("Confusion Matrix for Basic Decision Tree")
+st.subheader("Confusion Matrix for Decision Tree with Gender Feature")
 cm = metrics.confusion_matrix(y_test, y_pred)
 disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
