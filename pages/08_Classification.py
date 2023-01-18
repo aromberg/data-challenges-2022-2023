@@ -68,6 +68,7 @@ X_test_without_sex = X_test.drop(['sex'], axis=1)
 # create basic decision tree without sex feature
 decision_tree_without_sex = create_decision_tree(data_without_sex, X_train_without_sex, y_train, X_test_without_sex, y_test)
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
 tp = tree.plot_tree(decision_tree_without_sex,
               filled=True,
               rounded=True,
@@ -122,7 +123,6 @@ st.markdown(
 )
 
 # calculate confusion matrix
-st.set_option('deprecation.showPyplotGlobalUse', False)
 st.subheader("Confusion Matrix for Basic Decision Tree")
 metrics.plot_confusion_matrix(decision_tree, X_test, y_test, display_labels=['Does not have HD','Does have HD'])
 st.pyplot()
