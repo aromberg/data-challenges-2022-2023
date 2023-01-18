@@ -76,8 +76,13 @@ tp = tree.plot_tree(decision_tree_without_sex,
               feature_names=X_encode.columns)
 st.pyplot()
 
+# predict targets
+y_pred_without_sex = decision_tree_without_sex.predict(X_test_without_sex)
+
 st.subheader("Confusion Matrix for Decision Tree without Gender Feature")
-metrics.plot_confusion_matrix(decision_tree_without_sex, X_test_without_sex, y_test, display_labels=['Does not have HD','Does have HD'])
+cm_without_sex = metrics.confusion_matrix(y_test, y_pred_without_sex)
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_without_sex)
+disp.plot()
 st.pyplot()
 
 st.markdown(
@@ -87,8 +92,7 @@ st.markdown(
 counts_hd_no = len(data[data['hd']==0])
 counts_hd_yes = len(data[data['hd']==1])
 
-y_pred = decision_tree_without_sex.predict(X_test_without_sex)
-score = metrics.accuracy_score(y_test, y_pred)
+score = metrics.accuracy_score(y_test, y_pred_without_sex)
 
 st.markdown(
 "We check the balance of the dataset with respect to heart disease. \
@@ -110,7 +114,6 @@ Now we take gender into account to see if it improves the classifier.
 decision_tree = create_decision_tree(data, X_train, y_train, X_test, y_test)
 
 # visualize decision tree
-#st.set_option('deprecation.showPyplotGlobalUse', False)
 tp = tree.plot_tree(decision_tree,
               filled=True,
               rounded=True,
@@ -122,12 +125,16 @@ st.markdown(
 "If we look at the decision criteria in the tree, we see that gender occurs once."
 )
 
+# predict targets
+y_pred = decision_tree.predict(X_test)
+
 # calculate confusion matrix
 st.subheader("Confusion Matrix for Basic Decision Tree")
-metrics.plot_confusion_matrix(decision_tree, X_test, y_test, display_labels=['Does not have HD','Does have HD'])
+cm = metrics.confusion_matrix(y_test, y_pred)
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
 st.pyplot()
 
-y_pred = decision_tree.predict(X_test)
 score = metrics.accuracy_score(y_test, y_pred)
 
 st.markdown(
@@ -183,12 +190,16 @@ tp = tree.plot_tree(decision_tree_female,
               feature_names=X_encode.columns)
 st.pyplot()
 
+# predict targets
+y_pred_female = decision_tree_female.predict(X_test_female)
+
 st.subheader("Confusion Matrix for Female Decision Tree")
-metrics.plot_confusion_matrix(decision_tree_female, X_test_female, y_test_female, display_labels=['Does not have HD','Does have HD'])
+cm_female = metrics.confusion_matrix(y_test_female, y_pred_female)
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_female)
+disp.plot()
 st.pyplot()
 
 # calculate accuracy
-y_pred_female = decision_tree_female.predict(X_test_female)
 score_female = metrics.accuracy_score(y_test_female, y_pred_female)
 score_female_str = str(100 * round(score_female, 4))
 
@@ -223,12 +234,16 @@ tp = tree.plot_tree(decision_tree_male,
               feature_names=X_encode.columns)
 st.pyplot()
 
+# predict targets
+y_pred_male = decision_tree_male.predict(X_test_male)
+
 st.subheader("Confusion Matrix for Male Decision Tree")
-metrics.plot_confusion_matrix(decision_tree_male, X_test_male, y_test_male, display_labels=['Does not have HD','Does have HD'])
+cm_male = metrics.confusion_matrix(y_test_male, y_pred_male)
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_male)
+disp.plot()
 st.pyplot()
 
 # calculate accuracy
-y_pred_male = decision_tree_male.predict(X_test_male)
 score_male = metrics.accuracy_score(y_test_male, y_pred_male)
 score_male_str = str(100 * round(score_male, 4))
 
