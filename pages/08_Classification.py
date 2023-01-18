@@ -14,7 +14,7 @@ st.markdown(
 In order not to confuse numerical and categorical features, we made the dataset
 a bit more human-readable. Note that we still use the imputed dataset.
 """)
-data = pd.read_csv("../data/data_hr.csv")
+data = pd.read_csv("/data/data_hr.csv")
 st.dataframe(data.head())
 
 def create_decision_tree(data, X_train, y_train, X_test, y_test):
