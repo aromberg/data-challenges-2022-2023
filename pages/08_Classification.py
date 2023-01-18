@@ -90,14 +90,17 @@ st.markdown(
 counts_hd_no = len(data[data['hd']==0])
 counts_hd_yes = len(data[data['hd']==1])
 
-score = metrics.accuracy_score(y_test, y_pred_without_sex)
+accuracy_without_sex = metrics.accuracy_score(y_test, y_pred_without_sex)
+accuracy_without_sex_str = str(100 * round(accuracy_without_sex, 4))
+recall_without_sex = metrics.recall_score(y_test, y_pred_without_sex)
+recall_without_sex_str = str(round(100 * recall_without_sex, 2))
 
 st.markdown(
 "We check the balance of the dataset with respect to heart disease. \
 The number of records without heard disease is " + str(counts_hd_no) +
 " and the number of records with heard disease is " + str(counts_hd_yes) + ". \
 There is no large imbalance, which means we can use the accuary as a \
-performance measure. The accuray is " + str(100 * round(score, 4)) + "%."
+performance measure. The accuracy is {}% and the recall is {}%".format(accuracy_without_sex_str, recall_without_sex_str)
 )
 
 ################################################################################
@@ -133,12 +136,18 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 st.pyplot()
 
-score = metrics.accuracy_score(y_test, y_pred)
+accuracy = metrics.accuracy_score(y_test, y_pred)
+accuracy_str = str(100 * round(accuracy, 4))
+recall = metrics.recall_score(y_test, y_pred)
+recall_str = str(round(100 * recall, 2))
 
 st.markdown(
-"The accuray is " + str(100 * round(score, 4)) + "%. So we have been able to \
-improve performance. Gender seems to be a medical criterion for predicting the \
-disease."
+"""
+The accuray is {}% and the recall is {}%. This means that the accuracy has \
+remained more or less the same, while the recall has actually decreased. \
+Gender seems not to be an important medical criterion for predicting the \
+disease.
+""".format(accuracy_str, recall_str)
 )
 
 ################################################################################
@@ -158,7 +167,7 @@ st.markdown(
 """
 ## Gender-specific Decision Trees
 Now we create decision trees for both genders separately to see if we can \
-improve performance further. There are {} females and {} males in the dataset. \
+improve performance. There are {} females and {} males in the dataset. \
 {} females and {} males have heart diseases. The imbalances could strongly influence the \
 classifier performances.
 """.format(counts_female, counts_male, counts_hd_yes_female, counts_hd_yes_male))
@@ -198,13 +207,15 @@ disp.plot()
 st.pyplot()
 
 # calculate accuracy
-score_female = metrics.accuracy_score(y_test_female, y_pred_female)
-score_female_str = str(100 * round(score_female, 4))
+accuracy_female = metrics.accuracy_score(y_test_female, y_pred_female)
+accuracy_female_str = str(100 * round(accuracy_female, 4))
+recall_female = metrics.recall_score(y_test_female, y_pred_female)
+recall_female_str = str(round(100 * recall_female, 2))
 
 st.markdown(
 """
-The accuracy is {} %. A female-specific decision tree could not improve the performance.
-""".format(score_female_str)
+The accuracy is {}% and the recall is {}%. The accuracy has again remained about the same, while the recall has decreased a lot.
+""".format(accuracy_female_str, recall_female_str)
 )
 
 # male
@@ -242,20 +253,23 @@ disp.plot()
 st.pyplot()
 
 # calculate accuracy
-score_male = metrics.accuracy_score(y_test_male, y_pred_male)
-score_male_str = str(100 * round(score_male, 4))
+accuracy_male = metrics.accuracy_score(y_test_male, y_pred_male)
+accuracy_male_str = str(100 * round(accuracy_male, 4))
+recall_male = metrics.recall_score(y_test_male, y_pred_male)
+recall_male_str = str(round(100 * recall_male, 2))
 
 st.markdown(
 """
-The accuracy is {} %. A male-specific decision tree also failed to improve performance.
-""".format(score_male_str)
+The accuracy is {}% and the recall is {}%. A male-specific decision tree also failed to improve performance \
+in comparison to gender-unspecific decision trees.
+""".format(accuracy_male_str, recall_male_str)
 )
 
 st.markdown(
 """
 ## Conclusion
-Overall, we found that the performance of the classifier can be improved by \
-considering gender in decision making. Gender-specific classifiers, on the other \
-hand, reduce performance. Possibly the overfit is the reason for this.
+Overall, we found that the performance of the classifier could not be improved by \
+considering gender in decision making. Gender-specific classifiers reduce performance. \
+Possibly the overfit is the reason for this.
 """
 )
