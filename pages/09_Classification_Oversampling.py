@@ -50,7 +50,7 @@ ax.bar(x, male, color = 'g', width = 0.25, label ='Male', bottom=female)
 plt.title('Class Distribution')
 plt.xlabel('hd', fontsize = 15)
 plt.ylabel('Count', fontsize = 15)
-plt.xticks(X, list(class_distr.columns))
+plt.xticks(x, list(class_distr.columns))
 plt.legend(labels=list(class_distr.transpose().columns))
 
 st.pyplot(fig)
