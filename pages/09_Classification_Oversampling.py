@@ -44,7 +44,7 @@ male = class_distr.transpose()['Male'].values.tolist()
 x = np.arange(len(female))
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1])
-ax.bar(x, female, color = 'lightcoral', width = 0.25, label ='Female')
+ax.bar(x, female, color = 'darkviolet', width = 0.25, label ='Female')
 ax.bar(x, male, color = 'darkorange', width = 0.25, label ='Male', bottom=female)
 # look
 plt.title('Class Distribution')
