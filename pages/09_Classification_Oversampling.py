@@ -37,4 +37,4 @@ training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
 class_distr
-st.write(list(class_distr["No"].values()))
+st.write(class_distr.transpose()['Female'].values.tolist())
