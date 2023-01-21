@@ -27,11 +27,12 @@ X_encode = pd.get_dummies(X, columns=['cp','restecg','slope','thal'])
 
 # split training and test data
 X_train, X_test, y_train, y_test = model_selection.train_test_split(X_encode, y, random_state=1, test_size=0.25)
-# save training dataset
-training_dataset = pd.concat([X_train, y_train], axis=1)
-st.dataframe(training_dataset.head())
+
 # delete sex feature
 data_without_sex = data.drop(['sex'], axis=1)
 X_train_without_sex = X_train.drop(['sex'], axis=1)
 X_test_without_sex = X_test.drop(['sex'], axis=1)
 
+training_dataset = pd.concat([X_train, y_train], axis=1)
+class_distr = training_dataset["hd"].sex.value_counts()
+class_distr
