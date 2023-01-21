@@ -6,7 +6,7 @@ from sklearn import metrics
 from scipy.stats import skew
 import matplotlib.pyplot as plt
 import numpy as np
-
+st.set_page_config(page_title="Classification - Oversampling")
 st.markdown(
 """
 # Working with imbalanced data
