@@ -14,7 +14,8 @@ st.markdown(
 ## Check class distribution in training dataset
 Unbalanced datasets are those in which an uneven distribution of classes, a so-called skewness
 or bias, is found.
-To check for skewness we'll plot the distribution of our training dataset based on class labels and gender:
+To check for skewness we'll plot the distribution of our training dataset based on class labels and gender
+and calculate the sample skewness:
 """)
 
 data = pd.read_csv("data/data_hr.csv")
@@ -36,7 +37,8 @@ X_test_without_sex = X_test.drop(['sex'], axis=1)
 training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
-class_distr
+# compute skewness
+biased = skew(class_distr.to_array(), axis=1)
 # plot
 # set height
 female = class_distr.transpose()['Female'].values.tolist()
@@ -53,3 +55,12 @@ plt.ylabel('Count', fontsize = 15)
 plt.xticks(x, list(class_distr.columns))
 plt.legend(labels=list(class_distr.transpose().columns))
 st.pyplot(fig)
+
+
+st.markdown(
+"""
+The overall distribution of class labels seem to be slightly shifted towards
+a positive diagnosis of heart disease which is confirmed by the Fisher-Pearson coefficient of skewness
+of {}.
+""".format(biased)
+)
