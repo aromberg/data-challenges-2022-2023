@@ -37,5 +37,25 @@ training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
 class_distr
+# plot
+barWidth = 0.25
+fig = plt.subplots(figsize =(12, 8))
+# set height
 female = class_distr.transpose()['Female'].values.tolist()
-st.write(female)
+male = class_distr.transpose()['Male'].values.tolist()
+# pos of bar
+br1 = np.arange(len(female))
+br2 = [x + barWidth for x in br1]
+# make plot
+plt.bar(br1, female, color ='r', width = barWidth,
+        edgecolor ='grey', label ='Female')
+plt.bar(br2, male, color ='g', width = barWidth,
+        edgecolor ='grey', label ='Male')
+# look
+plt.xlabel('hd', fontsize = 15)
+plt.ylabel('Count', fontsize = 15)
+plt.xticks([r + barWidth for r in range(len(female))],
+        list(class_distr.colnames))
+ 
+plt.legend()
+st.pyplot(fig)
