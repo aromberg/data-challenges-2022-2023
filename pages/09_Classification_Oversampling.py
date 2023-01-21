@@ -47,10 +47,10 @@ ax = fig.add_axes([0,0,1,1])
 ax.bar(x, female, color = 'b', width = 0.25, label ='Female')
 ax.bar(x, male, color = 'g', width = 0.25, label ='Male', bottom=female)
 # look
+plt.set_title('Class Distribution')
 plt.xlabel('hd', fontsize = 15)
 plt.ylabel('Count', fontsize = 15)
-plt.xticks([r + 0.25 for r in range(len(female))],
-        list(class_distr.columns))
+plt.xticks(X, list(class_distr.columns))
 plt.legend(labels=list(class_distr.transpose().columns))
 
 st.pyplot(fig)
