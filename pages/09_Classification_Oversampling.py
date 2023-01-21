@@ -55,7 +55,7 @@ plt.bar(br2, male, color ='g', width = barWidth,
 plt.xlabel('hd', fontsize = 15)
 plt.ylabel('Count', fontsize = 15)
 plt.xticks([r + barWidth for r in range(len(female))],
-        list(class_distr.colnames))
+        list(class_distr.columns))
  
 plt.legend()
 st.pyplot(fig)
