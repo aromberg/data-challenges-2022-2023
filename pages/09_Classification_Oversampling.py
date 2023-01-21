@@ -35,4 +35,3 @@ data_without_sex = data.drop(['sex'], axis=1)
 X_train_without_sex = X_train.drop(['sex'], axis=1)
 X_test_without_sex = X_test.drop(['sex'], axis=1)
 
-
