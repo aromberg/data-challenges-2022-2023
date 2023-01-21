@@ -36,4 +36,4 @@ X_test_without_sex = X_test.drop(['sex'], axis=1)
 training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts()
 class_distr
-print(class_distr.to_numpy())
+st.write(class_distr.to_numpy())
