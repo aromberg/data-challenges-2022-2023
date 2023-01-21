@@ -61,6 +61,7 @@ st.markdown(
 """
 The overall distribution of class labels seem to be slightly shifted towards
 a positive diagnosis of heart disease, however the Fisher-Pearson coefficient of skewness
-of {} suggests unbiased 
+of {} suggests unbiased training data. Therefore, we would not expect to improve the
+performance of our decision-tree classifier by oversampling.
 """.format(biased[0])
 )
