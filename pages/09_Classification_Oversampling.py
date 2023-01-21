@@ -34,7 +34,7 @@ X_train_without_sex = X_train.drop(['sex'], axis=1)
 X_test_without_sex = X_test.drop(['sex'], axis=1)
 
 training_dataset = pd.concat([X_train, y_train], axis=1)
-class_distr = training_dataset.groupby('sex')['hd'].value_counts()
+class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={'Female': 0, 'Male': 1})
 #.unstack()
 st.write(class_distr)
