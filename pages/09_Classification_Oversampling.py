@@ -36,6 +36,5 @@ X_test_without_sex = X_test.drop(['sex'], axis=1)
 training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
-class_distr.transform().plot.bar()
-
+class_distr.transpose().plot.bar()
 
