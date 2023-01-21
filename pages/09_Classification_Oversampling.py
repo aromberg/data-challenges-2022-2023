@@ -13,8 +13,8 @@ st.markdown(
 # Working with imbalanced data
 ## Check class distribution in training dataset
 Unbalanced datasets are those in which an uneven distribution of classes, a so-called skewness
-or bias, is found in the training data set for classification prediction modeling.
-To check for skewness we'll plot the distribution of our training dataset based on class labels:
+or bias, is found.
+To check for skewness we'll plot the distribution of our training dataset based on class labels and gender:
 """)
 
 data = pd.read_csv("data/data_hr.csv")
@@ -37,4 +37,4 @@ training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
 
-st.bar_chart(class_distr.transpose())
+st.bar_chart(class_distr.transpose(), xlab="hd")
