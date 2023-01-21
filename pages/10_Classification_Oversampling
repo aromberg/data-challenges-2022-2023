@@ -1,0 +1,19 @@
+import streamlit as st
+import pandas as pd
+from sklearn import tree
+from sklearn import model_selection
+from sklearn import metrics
+from scipy.stats import skew
+import matplotlib.pyplot as plt
+import numpy as np
+
+st.markdown(
+"""
+# Working with imbalanced data
+## Check class distribution in training dataset
+Unbalanced datasets are those in which an uneven distribution of classes, a so-called skewness
+or bias, is found in the training data set for classification prediction modeling.
+To check for skewness we'll plot the distribution of our training dataset based on class labels:
+""")
+
+data = pd.read_csv("data/data_hr.csv")
