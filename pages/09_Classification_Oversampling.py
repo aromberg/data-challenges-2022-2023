@@ -58,4 +58,4 @@ plt.xticks([r + barWidth for r in range(len(female))],
         list(class_distr.columns))
  
 plt.legend()
-st.pyplot(fig)
+plt.show()
