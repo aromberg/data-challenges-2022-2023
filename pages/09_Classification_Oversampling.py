@@ -38,7 +38,7 @@ training_dataset = pd.concat([X_train, y_train], axis=1)
 class_distr = training_dataset.groupby('sex')['hd'].value_counts().unstack()
 class_distr = class_distr.rename(index={0: 'Female', 1: 'Male'}, columns={0: 'No', 1: 'Yes'})
 # compute skewness
-biased = skew(class_distr.to_array(), axis=1)
+biased = skew(class_distr.to_numpy(), axis=1)
 # plot
 # set height
 female = class_distr.transpose()['Female'].values.tolist()
