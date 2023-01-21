@@ -6,6 +6,17 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import numpy as np
 
+def calculate_metrics(y_test, y_pred):
+    """Calculate f1 and auc and return them as rounded strings."""
+
+    f1 = metrics.f1_score(y_test, y_pred)
+    f1_str = str(round(100 * f1, 2))
+
+    auc = metrics.roc_auc_score(y_test, y_pred)
+    auc_str = str(round(auc, 2))
+
+    return f1_str, auc_str
+
 st.set_page_config(page_title="Classification")
 
 st.markdown(
@@ -90,17 +101,13 @@ st.markdown(
 counts_hd_no = len(data[data['hd']==0])
 counts_hd_yes = len(data[data['hd']==1])
 
-accuracy_without_sex = metrics.accuracy_score(y_test, y_pred_without_sex)
-accuracy_without_sex_str = str(100 * round(accuracy_without_sex, 4))
-recall_without_sex = metrics.recall_score(y_test, y_pred_without_sex)
-recall_without_sex_str = str(round(100 * recall_without_sex, 2))
+f1, auc = calculate_metrics(y_test, y_pred_without_sex)
 
 st.markdown(
 "We check the balance of the dataset with respect to heart disease. \
 The number of records without heard disease is " + str(counts_hd_no) +
 " and the number of records with heard disease is " + str(counts_hd_yes) + ". \
-There is no large imbalance, which means we can use the accuary as a \
-performance measure. The accuracy is {}% and the recall is {}%".format(accuracy_without_sex_str, recall_without_sex_str)
+The F1-Score is {}% and the AUC is {}".format(f1, auc)
 )
 
 ################################################################################
@@ -136,18 +143,15 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 st.pyplot()
 
-accuracy = metrics.accuracy_score(y_test, y_pred)
-accuracy_str = str(100 * round(accuracy, 4))
-recall = metrics.recall_score(y_test, y_pred)
-recall_str = str(round(100 * recall, 2))
+
+f1, auc = calculate_metrics(y_test, y_pred)
 
 st.markdown(
 """
-The accuray is {}% and the recall is {}%. This means that the accuracy has \
-remained more or less the same, while the recall has actually decreased. \
-Gender seems not to be an important medical criterion for predicting the \
-disease.
-""".format(accuracy_str, recall_str)
+The F1-Score is {}% and the AUC is {}. This means that the performance has \
+remained more or less the same. Gender does not seem to be an important \
+medical criterion for predicting the disease.
+""".format(f1, auc)
 )
 
 ################################################################################
@@ -206,16 +210,13 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_female)
 disp.plot()
 st.pyplot()
 
-# calculate accuracy
-accuracy_female = metrics.accuracy_score(y_test_female, y_pred_female)
-accuracy_female_str = str(100 * round(accuracy_female, 4))
-recall_female = metrics.recall_score(y_test_female, y_pred_female)
-recall_female_str = str(round(100 * recall_female, 2))
+f1, auc = calculate_metrics(y_test_female, y_pred_female)
 
 st.markdown(
 """
-The accuracy is {}% and the recall is {}%. The accuracy has again remained about the same, while the recall has decreased a lot.
-""".format(accuracy_female_str, recall_female_str)
+The F1-Score is {}% and the AUC is {}. The performance has decreased \
+significantly.
+""".format(f1, auc)
 )
 
 # male
@@ -252,17 +253,14 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_male)
 disp.plot()
 st.pyplot()
 
-# calculate accuracy
-accuracy_male = metrics.accuracy_score(y_test_male, y_pred_male)
-accuracy_male_str = str(100 * round(accuracy_male, 4))
-recall_male = metrics.recall_score(y_test_male, y_pred_male)
-recall_male_str = str(round(100 * recall_male, 2))
+f1, auc = calculate_metrics(y_test_male, y_pred_male)
 
 st.markdown(
 """
-The accuracy is {}% and the recall is {}%. A male-specific decision tree also failed to improve performance \
-in comparison to gender-unspecific decision trees.
-""".format(accuracy_male_str, recall_male_str)
+The F1-Score is {}% and the AUC is {}%. A male-specific decision tree also \
+failed to improve performance in comparison to gender-unspecific decision \
+trees, although less significantly.
+""".format(f1, auc)
 )
 
 st.markdown(
