@@ -15,6 +15,7 @@ trimap = "*"
 pacmap = "*"
 gower = "*"
 seaborn = "*"
+imblearn = "*"
 
 [dev-packages]
 ipykernel = "*"
