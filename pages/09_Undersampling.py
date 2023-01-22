@@ -10,13 +10,6 @@ import imblearn.under_sampling as us
 
 st.set_page_config(page_title="Undersampling")
 
-st.markdown(
-"""
-This page is an extention of the classification page, in which we investigate wether undersampling can improve the classsification results.
-""")
-data = pd.read_csv("data/data_hr.csv")
-
-
 def create_decision_tree(data, X_train, y_train, X_test, y_test):
     # create inital decision tree
     decision_tree = tree.DecisionTreeClassifier(random_state=0)
@@ -39,20 +32,76 @@ def create_decision_tree(data, X_train, y_train, X_test, y_test):
 
     return opt_decision_tree.fit(X_train, y_train)
 
+
+data = pd.read_csv("data/data_hr.csv")
+
+########################### Undersamoling specific ####################################################
+
+data = pd.get_dummies(data, columns=['cp','restecg','slope','thal'])
+
+female = data[data["sex"] == 0]
+male = data[data["sex"] == 1] 
+
+nr_males = len(male)
+nr_females = len(female)
+nr_sick_males = len(male[male["hd"] == 1])
+nr_sick_females = len(female[female["hd"] == 1])
+
+st.markdown(
+f"# Undersampling\n"
+f"This page is an extention of the classification page, in which we investigate wether undersampling can improve the classsification results.\n"
+f"The imbalance in the dataset is two fold. Ther is inter class imbalance ie. more males then females and there is intra class imbalance ie. more people with heart desease then without.\n"
+f"The first setp in imbalance correction, would be to check the severity of the Problem. In The imputed dataset there are {nr_males} males and {nr_females} females.\n"
+f"There are {nr_sick_males} males with heart desease and {nr_males - nr_sick_males} without heart desease.\n"
+f"The in the womens group there are {nr_sick_females} people with heart desease and {nr_females + nr_sick_females} without heart desease.\n"
+)
+
+st.markdown(
+    f"Since females with heartdesease are the smallest group we first balanced the within class imbalance.\n"
+    f"In our case it was more important to keep the overall classes structure, then cleaning the data or focusing on the border regions.\n"
+    f"Therefore the best undersampling method in this case would be random undersampling, because it has the best chances, of not compromising the classes structure\n"
+    f"Prototype generation is not viable in this case, because there is no confirmation, that k-Means can capture the subclasses correctly\n"
+    f"For the inter classs undersampling the best method would be the NearMiss 3 method, because our goal is to find differences between the classses\n"
+    f"consequently it is very important to keep as much information as possible on the whole border region\n"
+)
+
+
+random_undersampler = us.RandomUnderSampler(random_state=0)
+f_resampled, f_hd = random_undersampler.fit_resample(female, female["hd"])
+m_resampled, m_hd = random_undersampler.fit_resample(male, male["hd"])
+new_data = pd.concat([m_resampled,f_resampled])
+
+near_miss_model = us.NearMiss(version=3)
+data, inter_hd = near_miss_model.fit_resample(new_data,new_data["sex"])
+
+female = data[data["sex"] == 0]
+male = data[data["sex"] == 1] 
+
+nr_males = len(male)
+nr_females = len(female)
+nr_sick_males = len(male[male["hd"] == 1])
+nr_sick_females = len(female[female["hd"] == 1])
+
+st.markdown(
+    f"The new Data set has {nr_males} males, of which {nr_sick_males} have heartdesease and {nr_females} of which {nr_sick_females} have heartdesease.\n"
+)
+
+#######################################################################################################################################
+
 st.markdown(
 """
-## Decision Tree without Gender Feature
-First, we create a decision tree using scikit-learn without considering gender \
+## Classification with the new Data
+First, we again create a decision tree using scikit-learn without considering gender \
 as a criterion for decision making.
 """
 )
 
 # split features and targets
-X = data.iloc[:,:13].copy()
+X_encode = data.iloc[:,data.columns != "hd"].copy()
 y = data['hd'].copy()
 
 # encode categorial values
-X_encode = pd.get_dummies(X, columns=['cp','restecg','slope','thal'])
+# X_encode = pd.get_dummies(X, columns=['cp','restecg','slope','thal'])
 
 # split training and test data
 X_train, X_test, y_train, y_test = model_selection.train_test_split(X_encode, y, random_state=1, test_size=0.25)
@@ -82,10 +131,6 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_without_sex)
 disp.plot()
 st.pyplot()
 
-st.markdown(
-"We evaluated the performance of the decision tree with a confusion matrix."
-)
-
 counts_hd_no = len(data[data['hd']==0])
 counts_hd_yes = len(data[data['hd']==1])
 
@@ -95,18 +140,14 @@ recall_without_sex = metrics.recall_score(y_test, y_pred_without_sex)
 recall_without_sex_str = str(round(100 * recall_without_sex, 2))
 
 st.markdown(
-"We check the balance of the dataset with respect to heart disease. \
-The number of records without heard disease is " + str(counts_hd_no) +
-" and the number of records with heard disease is " + str(counts_hd_yes) + ". \
-There is no large imbalance, which means we can use the accuary as a \
-performance measure. The accuracy is {}% and the recall is {}%".format(accuracy_without_sex_str, recall_without_sex_str)
+    f"Accuracy: {accuracy_without_sex_str}, Recall: {recall_without_sex_str}"
 )
 
 ################################################################################
 
 st.markdown(
 """
-## Decision Tree with Gender Feature
+## Descisiontree with gender feature
 Now we take gender into account to see if it improves the classifier.
 """)
 
@@ -142,10 +183,7 @@ recall_str = str(round(100 * recall, 2))
 
 st.markdown(
 """
-The accuray is {}% and the recall is {}%. This means that the accuracy has \
-remained more or less the same, while the recall has actually decreased. \
-Gender seems not to be an important medical criterion for predicting the \
-disease.
+The accuray is {}% and the recall is {}%.
 """.format(accuracy_str, recall_str)
 )
 
@@ -165,20 +203,18 @@ counts_hd_yes_female = len(data_female[data_female['hd']==1])
 st.markdown(
 """
 ## Gender-specific Decision Trees
-Now we create decision trees for both genders separately to see if we can \
-improve performance. There are {} females and {} males in the dataset. \
-{} females and {} males have heart diseases. The imbalances could strongly influence the \
-classifier performances.
-""".format(counts_female, counts_male, counts_hd_yes_female, counts_hd_yes_male))
-
+"""
+)
 # female
 
 # split features and targets
-X_female = data_female.iloc[:,:13].copy()
+X_female = data_female.iloc[:,data_female.columns != "hd"].copy()
 y_female = data_female['hd'].copy()
 
 # encode categorial values
-X_encode_female = pd.get_dummies(X_female, columns=['cp','restecg','slope','thal'])
+# X_encode_female = pd.get_dummies(X_female, columns=['cp','restecg','slope','thal'])
+
+X_encode_female = X_female
 
 # split training and test data
 X_train_female, X_test_female, y_train_female, y_test_female = \
@@ -213,18 +249,20 @@ recall_female_str = str(round(100 * recall_female, 2))
 
 st.markdown(
 """
-The accuracy is {}% and the recall is {}%. The accuracy has again remained about the same, while the recall has decreased a lot.
+The accuracy is {}% and the recall is {}%.
 """.format(accuracy_female_str, recall_female_str)
 )
 
 # male
 
 # split features and targets
-X_male = data_male.iloc[:,:13].copy()
+X_male = data_male.iloc[:,data_male.columns != "hd"].copy()
 y_male = data_male['hd'].copy()
 
 # encode categorial values
-X_encode_male = pd.get_dummies(X_male, columns=['cp','restecg','slope','thal'])
+# X_encode_male = pd.get_dummies(X_male, columns=['cp','restecg','slope','thal'])
+
+X_encode_male = X_male
 
 # split training and test data
 X_train_male, X_test_male, y_train_male, y_test_male = \
@@ -259,16 +297,13 @@ recall_male_str = str(round(100 * recall_male, 2))
 
 st.markdown(
 """
-The accuracy is {}% and the recall is {}%. A male-specific decision tree also failed to improve performance \
-in comparison to gender-unspecific decision trees.
+The accuracy is {}% and the recall is {}%.
 """.format(accuracy_male_str, recall_male_str)
 )
 
 st.markdown(
 """
 ## Conclusion
-Overall, we found that the performance of the classifier could not be improved by \
-considering gender in decision making. Gender-specific classifiers reduce performance. \
-Possibly the overfit is the reason for this.
+With the undesampled data the gender specific trees show better performance, while the descisiontree considering sex does not improve.
 """
 )
