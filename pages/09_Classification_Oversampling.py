@@ -390,7 +390,7 @@ vals = male_class_distr.tolist()
 labels = list(male_class_distr.index)
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1])
-ax.bar(labels, vals, color = 'darkviolet', width = 0.25)
+ax.bar(labels, vals, color = 'darkorange', width = 0.25)
 # look
 plt.title('Class Distribution - Males')
 plt.xlabel('hd', fontsize = 15)
