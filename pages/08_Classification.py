@@ -13,9 +13,15 @@ def calculate_metrics(y_test, y_pred):
     f1_str = str(round(100 * f1, 2))
 
     auc = metrics.roc_auc_score(y_test, y_pred)
-    auc_str = str(round(auc, 2))
+    auc_str = str(round(100 * auc, 2))
 
-    return f1_str, auc_str
+    accuracy = metrics.accuracy_score(y_test, y_pred)
+    accuracy_str = str(round(100*accuracy,2))
+
+    recall = metrics.recall_score(y_test, y_pred)
+    recall_str = str(round(100 * recall, 2))
+
+    return f1_str, auc_str, accuracy_str, recall_str
 
 st.set_page_config(page_title="Classification")
 
@@ -102,13 +108,20 @@ st.markdown(
 counts_hd_no = len(data[data['hd']==0])
 counts_hd_yes = len(data[data['hd']==1])
 
-f1, auc = calculate_metrics(y_test, y_pred_without_sex)
+f1, auc, acc, rec = calculate_metrics(y_test, y_pred_without_sex)
+
+col1, col2 = st.columns(2)
+with col1:
+     st.metric(label="F-Score", value=f"{f1}%")
+     st.metric(label="AUC", value=f"{auc}%")
+with col2:
+     st.metric(label="Accuracy", value=f"{acc}%")
+     st.metric(label="Recall", value=f"{rec}%")
 
 st.markdown(
 "We check the balance of the dataset with respect to heart disease. \
 The number of records without heard disease is " + str(counts_hd_no) +
-" and the number of records with heard disease is " + str(counts_hd_yes) + ". \
-The F1-Score is {}% and the AUC is {}".format(f1, auc)
+" and the number of records with heard disease is " + str(counts_hd_yes) + "."
 )
 
 ################################################################################
@@ -145,12 +158,19 @@ disp.plot()
 st.pyplot()
 
 
-f1, auc = calculate_metrics(y_test, y_pred)
+f1, auc, acc, rec = calculate_metrics(y_test, y_pred)
+
+col1, col2 = st.columns(2)
+with col1:
+     st.metric(label="F-Score", value=f"{f1}%")
+     st.metric(label="AUC", value=f"{auc}%")
+with col2:
+     st.metric(label="Accuracy", value=f"{acc}%")
+     st.metric(label="Recall", value=f"{rec}%")
 
 st.markdown(
 """
-The F1-Score is {}% and the AUC is {}. This means that the performance has \
-remained more or less the same. Gender does not seem to be an important \
+The performance has remained more or less the same. Gender does not seem to be an important \
 medical criterion for predicting the disease.
 """.format(f1, auc)
 )
@@ -211,13 +231,21 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_female)
 disp.plot()
 st.pyplot()
 
-f1, auc = calculate_metrics(y_test_female, y_pred_female)
+f1, auc, acc, rec = calculate_metrics(y_test_female, y_pred_female)
+
+col1, col2 = st.columns(2)
+with col1:
+     st.metric(label="F-Score", value=f"{f1}%")
+     st.metric(label="AUC", value=f"{auc}%")
+with col2:
+     st.metric(label="Accuracy", value=f"{acc}%")
+     st.metric(label="Recall", value=f"{rec}%")
+
 
 st.markdown(
 """
-The F1-Score is {}% and the AUC is {}. The performance has decreased \
-significantly.
-""".format(f1, auc)
+The performance has decreased significantly.
+"""
 )
 
 # male
@@ -254,14 +282,23 @@ disp = metrics.ConfusionMatrixDisplay(confusion_matrix=cm_male)
 disp.plot()
 st.pyplot()
 
-f1, auc = calculate_metrics(y_test_male, y_pred_male)
+f1, auc, acc, rec = calculate_metrics(y_test_male, y_pred_male)
+
+col1, col2 = st.columns(2)
+with col1:
+     st.metric(label="F-Score", value=f"{f1}%")
+     st.metric(label="AUC", value=f"{auc}%")
+with col2:
+     st.metric(label="Accuracy", value=f"{acc}%")
+     st.metric(label="Recall", value=f"{rec}%")
+
 
 st.markdown(
 """
-The F1-Score is {}% and the AUC is {}%. A male-specific decision tree also \
+A male-specific decision tree also \
 failed to improve performance in comparison to gender-unspecific decision \
 trees, although less significantly.
-""".format(f1, auc)
+"""
 )
 
 st.markdown(
