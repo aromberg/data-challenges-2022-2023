@@ -5,6 +5,7 @@ from sklearn import model_selection
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import numpy as np
+import pacmap
 
 import imblearn.under_sampling as us
 
@@ -34,10 +35,11 @@ def create_decision_tree(data, X_train, y_train, X_test, y_test):
 
 
 data = pd.read_csv("data/data_hr.csv")
-
 ########################### Undersamoling specific ####################################################
 
 data = pd.get_dummies(data, columns=['cp','restecg','slope','thal'])
+all = data
+
 
 female = data[data["sex"] == 0]
 male = data[data["sex"] == 1] 
@@ -85,6 +87,31 @@ nr_sick_females = len(female[female["hd"] == 1])
 st.markdown(
     f"The new Data set has {nr_males} males, of which {nr_sick_males} have heartdesease and {nr_females} of which {nr_sick_females} have heartdesease.\n"
 )
+
+pacmaped = pacmap.PaCMAP(n_components=2, n_neighbors=None).fit_transform(all.to_numpy())
+pacmaped_transformed = pd.DataFrame(pacmaped)
+
+pacmaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 0])[0], (pacmaped_transformed[pacmaped_transformed.sex == 0])[1])
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 1])[0], (pacmaped_transformed[pacmaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((pacmaped_transformed)[0], (pacmaped_transformed)[1])
+st.pyplot(figure2)
+
+
+pacmaped = pacmap.PaCMAP(n_components=2, n_neighbors=None).fit_transform(data.to_numpy())
+pacmaped_transformed = pd.DataFrame(pacmaped)
+
+pacmaped_transformed["sex"] = all["sex"]
+figure2 = plt.figure()
+if (len(pd.unique(all["sex"])) > 1):
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 0])[0], (pacmaped_transformed[pacmaped_transformed.sex == 0])[1])
+    plt.scatter((pacmaped_transformed[pacmaped_transformed.sex == 1])[0], (pacmaped_transformed[pacmaped_transformed.sex == 1])[1])
+else:
+    plt.scatter((pacmaped_transformed)[0], (pacmaped_transformed)[1])
+st.pyplot(figure2)
 
 #######################################################################################################################################
 
